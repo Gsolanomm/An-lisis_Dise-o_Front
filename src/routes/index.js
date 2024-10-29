@@ -15,10 +15,7 @@ import Contact from '../components/Contact/Main'
 import BlogList from '../components/BlogList/Main'
 import BlogDetail from '../components/BlogDetail/Main'
 import Gallery from '../components/Gallery/Main'
-import Register from '../components/Register/Main'
-import Login from '../components/Login/Main'
-import Profile from '../components/Profile/Main'
-import ProtectedRoute from '../components/Auth/ProtectedRoute'
+import Category from '../components/Categorys/SeeCategorys'
 
 function Index() {
     
@@ -40,14 +37,7 @@ function Index() {
           <Route path="/bloglist" element={<BlogList />} />
           <Route path="/blogdetail" element={<BlogDetail/>} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/perfil" element={<ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>} />
-
-
-
+          <Route path="/Admin_Categorys" element={<Category />} />
         </Routes>
     </>
   )
