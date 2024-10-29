@@ -1,0 +1,164 @@
+/* src/components/LoginCustom.css */
+
+/* Sección Principal */
+.custom-login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1f1f1f;
+  color: #fff;
+  padding: 2rem;
+}
+
+/* Contenedor del Formulario */
+.custom-login-container {
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem;
+  background-color: #2b2b2b;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+/* Encabezado */
+.custom-login-header h2 {
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Estilos del Formulario */
+.custom-login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-form-group {
+  width: 100%;
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.custom-form-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: #bbbbbb;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.custom-form-group input {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #3b3b3b;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+.custom-form-group input::placeholder {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Enlace de Olvidar Contraseña */
+.custom-forgot-password {
+  font-size: 0.9rem;
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.custom-forgot-password a {
+  color: #e50914;
+  text-decoration: none;
+}
+
+.custom-forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Botón de Login */
+.custom-login-button {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #e50914;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.custom-login-button:hover {
+  background-color: #c40d12;
+}
+
+/* Botones de Autenticación Social */
+.custom-social-login-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.custom-social-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem;
+  margin: 0 0.5rem;
+  background-color: transparent;
+  border: 1px solid #555;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-google-button {
+  color: #ea4335;
+}
+
+.custom-facebook-button {
+  color: #1877f2;
+}
+
+.custom-social-button i {
+  margin-right: 0.5rem;
+}
+
+.custom-social-button:hover {
+  background-color: #333;
+  text-decoration: none;
+}
+
+/* Enlace para Registro */
+.custom-register-link {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #bbbbbb;
+}
+
+.custom-register-link a {
+  color: #e50914;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.custom-register-link a:hover {
+  text-decoration: underline;
+}
