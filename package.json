@@ -27,6 +27,7 @@
     "skrollr": "^0.6.26",
     "slick-carousel": "^1.8.1",
     "slick-slider": "^1.8.2",
+    "sweetalert": "^2.1.2",
     "sweetalert2": "^11.14.4",
     "swiper": "^10.1.0",
     "web-vitals": "^2.1.4"
