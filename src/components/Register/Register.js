@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../Auth/AxiosConfig';
-
+import Swal from 'sweetalert2';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,36 +13,54 @@ function Register() {
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateFormData = () => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const today = new Date();
+    const dateOfBirth = new Date(formData.dateOfBirth);
+
+    if (!formData.firstName.trim() || !nameRegex.test(formData.firstName)) {
+      Swal.fire('Error', 'El nombre no debe estar vacío y solo debe contener letras.', 'error');
+      return false;
+    }
+    if (!formData.lastName.trim() || !nameRegex.test(formData.lastName)) {
+      Swal.fire('Error', 'El apellido no debe estar vacío y solo debe contener letras.', 'error');
+      return false;
+    }
+    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
+      Swal.fire('Error', 'Por favor ingrese un correo electrónico válido.', 'error');
+      return false;
+    }
+    if (!formData.dateOfBirth || dateOfBirth >= today) {
+      Swal.fire('Error', 'La fecha de nacimiento debe ser anterior a la fecha actual.', 'error');
+      return false;
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+    if (!passwordRegex.test(formData.password)) {
+      Swal.fire('Error', 'La contraseña debe tener al menos 6 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres no alfanuméricos.', 'error');
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      Swal.fire('Error', 'Las contraseñas no coinciden.', 'error');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validación de coincidencia de contraseñas
-    if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
+    if (!validateFormData()) return;
 
     try {
-      // Enviar datos al backend
-      const response = await api.post('/auth/register', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        dateOfBirth: formData.dateOfBirth,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      // Si el registro es exitoso
-      setSuccess('Usuario registrado con éxito');
-      setError('');
+      await api.post('/auth/register', formData);
+      Swal.fire('Éxito', 'Usuario registrado con éxito', 'success');
       setFormData({
         firstName: '',
         lastName: '',
@@ -51,13 +69,12 @@ function Register() {
         password: '',
         confirmPassword: ''
       });
-      
-      // Redirigir al usuario a la página de login
       navigate('/login');
     } catch (error) {
-      setError(error.response?.data?.error || 'Error al registrar el usuario');
+      Swal.fire('Error', error.response?.data?.error || 'Error al registrar el usuario', 'error');
     }
   };
+
 
   return (
     <section className="custom-register-section">
@@ -96,6 +113,7 @@ function Register() {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
+              max={new Date().toISOString().split("T")[0]} // Set max date to today
               required
             />
           </div>
@@ -132,8 +150,6 @@ function Register() {
               required
             />
           </div>
-          {error && <p className="error-message">{error}</p>}
-          {success && <p className="success-message">{success}</p>}
           <button type="submit" className="custom-register-button">REGISTRARSE</button>
         </form>
         <p className="custom-login-link">
@@ -143,5 +159,4 @@ function Register() {
     </section>
   );
 }
-
 export default Register;
