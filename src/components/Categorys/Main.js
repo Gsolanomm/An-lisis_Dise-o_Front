@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Header from '../Header/Main'
 import Footer from '../Footer/Main'
 import Aos from 'aos'
-import SeeCategorys from './SeeCategorys'
+import Setting from './Setting'
 
 
 function Main() {
@@ -15,7 +15,7 @@ function Main() {
     return (
         <div className='page_wrapper'>
             <Header />
-            <SeeCategorys />
+           <Setting />
             <Footer />
         </div>
     )

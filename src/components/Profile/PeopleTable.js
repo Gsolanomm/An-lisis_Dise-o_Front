@@ -78,7 +78,7 @@ const PeopleTable = () => {
         <p className="text-center">No hay usuarios disponibles</p>
       ) : (
         <div className="table-responsive">
-          <table className="table table-dark table-striped table-bordered border-info">
+          <table className="table table-borderless text-white mt-3" style={{width:'1300px',marginLeft:'%'}}>
             <thead className="table-danger text-center">
               <tr>
                 <th>Número</th>
@@ -93,7 +93,7 @@ const PeopleTable = () => {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr key={user.idUser} className="text-center align-middle">
+                <tr key={user.idUser} className="text-center align-middle text-white">
                   <td>{index + 1 + (currentPage - 1) * limit}</td>
                   <td>{user.firstName}</td>
                   <td>{user.lastName}</td>

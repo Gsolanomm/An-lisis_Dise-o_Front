@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import InformationModal from './InformationModal';
+import Swal from 'sweetalert2';
 
 function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
     const [name, setName] = useState('');
     const [selectedSubCategories, setSelectedSubCategories] = useState([]);
     const [subCategoryName, setSubCategoryName] = useState('');
-    const [showEditSubCategoryModal, setShowEditSubCategoryModal] = useState(false);
-    const [PickedSubCategory, setPickedSubCategory] = useState(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showDetailModal, setShowDetailModal] = useState(false);
-    const [subCategoryToDeleteIndex, setSubCategoryToDeleteIndex] = useState(null);
- 
+    const [pickedSubCategory, setPickedSubCategory] = useState(null);
+
     useEffect(() => {
         if (category) {
             setName(category.name);
             setSelectedSubCategories(subCategories);
-
-            console.log(subCategories);
-            
         } else {
             setName('');
         }
@@ -33,51 +26,69 @@ function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
             setSubCategoryName('');
         }
     };
-    
 
     const handleDeleteSubCategory = (index) => {
-        setSubCategoryToDeleteIndex(index); // Guardar el índice de la subcategoría
-        setShowDeleteModal(true); // Mostrar el modal
-    };
+        const subCategoryToDelete = selectedSubCategories[index];
 
-    const confirmDeleteSubCategory = () => {
-        if (subCategoryToDeleteIndex !== null) {
-            setSelectedSubCategories(selectedSubCategories.filter((_, i) => i !== subCategoryToDeleteIndex));
-        }
-        closeDeleteModal(); // Cerrar el modal después de eliminar
-    };
-
-    const closeDeleteModal = () => {
-        setShowDeleteModal(false);
-        setSubCategoryToDeleteIndex(null); // Reiniciar el índice
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `¿Quieres eliminar la subcategoría "${subCategoryToDelete.name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#C83F46',
+            cancelButtonColor: '#6C757D',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setSelectedSubCategories(selectedSubCategories.filter((_, i) => i !== index));
+                Swal.fire(
+                    'Eliminado!',
+                    'La subcategoría ha sido eliminada.',
+                    'success'
+                );
+            }
+        });
     };
 
     const handleEditSubCategory = (subCategory) => {
-        setPickedSubCategory(subCategory);
-        setShowEditSubCategoryModal(true);
-        console.log(subCategory.idSubCategory);
-        console.log(subCategory.name);
-       
+        Swal.fire({
+            title: `Cambiar nombre de la subcategoría "${subCategory.name}"`,
+            input: 'text',
+            inputValue: subCategory.name,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return '¡Debes ingresar un nombre!';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newName = result.value;
+                setSelectedSubCategories(selectedSubCategories.map(subCat => 
+                    subCat.idSubCategory === subCategory.idSubCategory ? { ...subCat, name: newName } : subCat
+                ));
+                Swal.fire('Guardado!', 'El nombre de la subcategoría ha sido actualizado.', 'success');
+            }
+        });
     };
-
-    const handleConfirmEditSubCategory = (newName) => {
-        setSelectedSubCategories(selectedSubCategories.map(subCat => subCat.idSubCategory === PickedSubCategory.idSubCategory ? { ...subCat, name: newName } : subCat));
-        setShowEditSubCategoryModal(false);
-        setPickedSubCategory(null);
-    };
+    
 
     const handleSubmit = () => {
         const categoryData = { name, subCategories: selectedSubCategories };
 
-
-if(categoryData.name.trim() === ''){
-    setShowDetailModal(true);
-
-}else{
-
-        onSubmit(categoryData);
-        onClose();
-}
+        if (categoryData.name.trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Nombre de categoría inválido',
+            });
+        } else {
+            onSubmit(categoryData);
+            onClose();
+        }
     };
 
     if (!isOpen) return null;
@@ -147,48 +158,46 @@ if(categoryData.name.trim() === ''){
                     </div>
 
                     <ul className="subCategory-list list-unstyled" style={{  maxHeight: '200px', overflowY: 'auto',paddingRight: '10px'}}>
-    {selectedSubCategories && selectedSubCategories.length > 0 ? (
-        selectedSubCategories.map((subCategory, index) => (
-            <li key={subCategory.idSubCategory} className="subCategory-item d-flex justify-content-between align-items-center mb-2">
-            <span className="text-white" style={{
-                maxWidth: '160px', 
-                whiteSpace: 'nowrap', 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis' 
-            }}>
-                {subCategory.name}
-            </span>
-            <div>
-                <button className="btn btn_primary" style={{
-                    minWidth:'70px',
-                    backgroundColor: '#FFC107', 
-                    color: 'white', 
-                    fontWeight: 'bold', 
-                    padding: '5px 10px', 
-                    fontSize: '14px', 
-                    marginRight: '5px' 
-                }} onClick={() => handleEditSubCategory(subCategory, index)}>
-                    Editar
-                </button>
-                <button className="btn btn_primary" style={{
-                    minWidth:'70px', 
-                    backgroundColor: '#C83F46', 
-                    color: 'white', 
-                    fontWeight: 'bold', 
-                    padding: '5px 10px', 
-                    fontSize: '14px' 
-                }} onClick={() => handleDeleteSubCategory(index)}>
-                    Eliminar
-                </button>
-            </div>
-        </li>
-        
-        ))
-    ) : (
-        <li className="text-white">{category ? 'No hay subcategorías' : ''}</li>
-    )}
-</ul>
-
+                        {selectedSubCategories && selectedSubCategories.length > 0 ? (
+                            selectedSubCategories.map((subCategory, index) => (
+                                <li key={subCategory.idSubCategory} className="subCategory-item d-flex justify-content-between align-items-center mb-2">
+                                    <span className="text-white" style={{
+                                        maxWidth: '160px', 
+                                        whiteSpace: 'nowrap', 
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis' 
+                                    }}>
+                                        {subCategory.name}
+                                    </span>
+                                    <div>
+                                        <button className="btn btn_primary" style={{
+                                            minWidth:'70px',
+                                            backgroundColor: '#FFC107', 
+                                            color: 'white', 
+                                            fontWeight: 'bold', 
+                                            padding: '5px 10px', 
+                                            fontSize: '14px', 
+                                            marginRight: '5px' 
+                                        }} onClick={() => handleEditSubCategory(subCategory)}>
+                                            Editar
+                                        </button>
+                                        <button className="btn btn_primary" style={{
+                                            minWidth:'70px', 
+                                            backgroundColor: '#C83F46', 
+                                            color: 'white', 
+                                            fontWeight: 'bold', 
+                                            padding: '5px 10px', 
+                                            fontSize: '14px' 
+                                        }} onClick={() => handleDeleteSubCategory(index)}>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <li className="text-white">{category ? 'No hay subcategorías' : ''}</li>
+                        )}
+                    </ul>
 
                     <div className="row mt-3">
                         <div className="col">
@@ -202,36 +211,6 @@ if(categoryData.name.trim() === ''){
                     </div>
                 </div>
             </div>
-
-            {showEditSubCategoryModal && (
-                <InformationModal
-                    text={`Cambiar nombre de la subcategoría "${PickedSubCategory?.name}"`}
-                    onConfirm={handleConfirmEditSubCategory}
-                    onCancel={() => setShowEditSubCategoryModal(false)}
-                    mode={3}
-                    initialValue={PickedSubCategory?.name}
-                />
-            )}
-
-{showDetailModal && (
-    <InformationModal
-        text="Nombre de categoría inválido"
-        onCancel={() => setShowDetailModal(false)}
-        mode={2}
-    />
-)}
-
-
-{showDeleteModal && (
-    <InformationModal
-        text={`¿Estás seguro que quieres eliminar la subcategoría "${selectedSubCategories[subCategoryToDeleteIndex]?.name}"?`}
-        onConfirm={confirmDeleteSubCategory}
-        onCancel={closeDeleteModal}
-        mode={1}
-    />
-)}
-
-
         </div>
     );
 }
