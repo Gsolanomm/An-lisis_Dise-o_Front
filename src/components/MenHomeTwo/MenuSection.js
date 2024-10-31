@@ -69,12 +69,12 @@ function MenuSection() {
                                                     <img src={Dish07} alt="img" />
                                                 </div>
                                                 <div className="dish_text">
-                                                    <h3>Tommy’s Margarita</h3>
+                                                    <h3>hola</h3>
                                                     <p>
                                                         Tomatoes Beef, Eggs, poached Beef, Eggs, poached, with
                                                         bacon, Bacon, chorizo, roasted roma{" "}
                                                     </p>
-                                                    <span className="price">$18.00</span>
+                                                    <span className="price">$20.00</span>
                                                 </div>
                                             </div>
                                         </div>

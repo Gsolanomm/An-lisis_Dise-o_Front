@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
-import DishImg1 from '../../assets/images/chiken_side.png'
-import DishImg2 from '../../assets/images/chiken_side2.png'
-import Dish01 from '../../assets/images/pop_dish01.png'
-import Dish02 from '../../assets/images/pop_dish02.png'
-import Dish03 from '../../assets/images/pop_dish03.png'
-import Dish04 from '../../assets/images/pop_dish04.png'
+import DishImg1 from '../../assets/images/image_1.png'
+import DishImg2 from '../../assets/images/image_1.png'
+import Dish01 from '../../assets/images/image_1.png'
+import Dish02 from '../../assets/images/image_1.png'
+import Dish03 from '../../assets/images/image_1.png'
+import Dish04 from '../../assets/images/image_1.png'
 
 const Popular = {
   responsive: [
@@ -109,7 +109,7 @@ function PopularDish() {
           </div>
           <div className="text-center mb-md-4">
             <Link to="/MenuList1" className="btn btn_primary">
-              view our full menu
+              hola chat
             </Link>
           </div>
         </div>

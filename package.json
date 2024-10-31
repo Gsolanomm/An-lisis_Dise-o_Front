@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "aos": "^2.3.4",
     "axios": "^1.7.7",
+    "flavoury-react": "file:",
     "fslightbox-react": "^1.7.6",
     "gsap": "^3.12.2",
     "number-counter": "^1.0.3",

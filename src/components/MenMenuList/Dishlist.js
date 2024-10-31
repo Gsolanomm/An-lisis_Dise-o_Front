@@ -27,7 +27,7 @@ function DishList() {
                     <div className="info">
                       <div className="mainCource">
                         <div className="dishName">
-                          <h4>Beef steak grill pan</h4>
+                          <h4>hola chat</h4>
                           <span className="new">NEW</span>
                         </div>
                         <div className="doted" />
