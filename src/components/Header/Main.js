@@ -148,6 +148,7 @@ function Main() {
                     <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Ajustes</Link>
                   </li>
                 )}
+                
                 <li className="nav-item contact_number">
                   <Link className="nav-link" to="tel:+18001234578"><span>Book a table :</span> +1 800 123 45 78</Link>
                 </li>
@@ -169,14 +170,7 @@ function Main() {
                 </div>
               )}
             </div>
-            <div className="action_bar">
-              <Link to="/reservation1" className="btn btn_primary" onClick={handleMenuItemClick}>FIND A TABLE</Link>
-              <div className="bar" onClick={() => setNav(true)}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
+          
           </nav>
         </div>
       </header>
