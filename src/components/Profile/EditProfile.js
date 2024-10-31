@@ -171,6 +171,7 @@ function EditProfile() {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
+              max={new Date().toISOString().split('T')[0]}
               className="form-control text-light bg-dark"
               required
             />

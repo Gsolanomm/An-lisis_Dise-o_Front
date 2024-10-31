@@ -15,6 +15,7 @@ function Main() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar si el usuario es administrador
 
   const navigate = useNavigate();
 
@@ -23,9 +24,22 @@ function Main() {
     setIsAuthenticated(!!token);
 
     if (token) {
+      fetchUserRole();
       fetchProfileImage();
     }
   }, []);
+
+  const fetchUserRole = async () => {
+    try {
+      const response = await api.get('/auth/verify-role', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      setIsAdmin(response.data.role === 'administrador'); // Comprueba si el rol es "administrador"
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error', 'Error al verificar el rol del usuario.', 'error');
+    }
+  };
 
   const fetchProfileImage = async () => {
     try {
@@ -50,6 +64,7 @@ function Main() {
     localStorage.removeItem('accessToken');
     setIsAuthenticated(false);
     setProfileImage(null);
+    setIsAdmin(false); // Restablece el estado de administrador al cerrar sesión
     navigate('/login');
   };
 
@@ -73,7 +88,7 @@ function Main() {
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg">
             <Link className="navbar-brand" to="/">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="image" />
             </Link>
             <button className={`navbar-toggler ${menuOpen ? 'open' : ''}`} type="button" onClick={toggleMenu}>
               <span className="navbar-toggler-icon">
@@ -85,14 +100,18 @@ function Main() {
             <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>Home</Link>
-                  <span className="drp_btn"><i className="icofont-rounded-down" /></span>
+                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>
+                    Home
+                  </Link>
+                  <span className="drp_btn">
+                    <i className="icofont-rounded-down" />
+                  </span>
                   <div className={`sub_menu ${isDropdownOpen ? 'open' : ''}`}>
                     <ul style={{ display: "block" }}>
                       <li><Link to="/">Home Default</Link></li>
                       <li><Link to="/home2">Home Slider Hero</Link></li>
                       <li><Link to="/home3">Home Dish List</Link></li>
-                      <li><Link target="_blank" to={"https://mediacity.co.in/flavoury/04"}>Home Burger</Link></li>
+                      <li><Link target="_blank" to={"https://mediacity.co.in/flavoury/04"} >Home Burger</Link></li>
                     </ul>
                   </div>
                 </li>
@@ -108,7 +127,6 @@ function Main() {
                   </div>
                 </li>
                 <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/ourchef" onClick={handleMenuItemClick}>OUR CHEFS</Link></li>
                 <li className="nav-item has_dropdown">
                   <Link className="nav-link" to="#" onClick={handleMenuItemClick}>Pages</Link>
                   <span className="drp_btn"><i className="icofont-rounded-down" /></span>
@@ -124,22 +142,20 @@ function Main() {
                   </div>
                 </li>
                 <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
+                {isAuthenticated && isAdmin && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Ajustes</Link>
+                  </li>
+                )}
                 <li className="nav-item contact_number">
-                  <Link className="nav-link" to="tel:+18001234578">
-                    <span>Book a table :</span> +1 800 123 45 78
-                  </Link>
+                  <Link className="nav-link" to="tel:+18001234578"><span>Book a table :</span> +1 800 123 45 78</Link>
                 </li>
               </ul>
             </div>
             {/* Ícono de usuario o imagen de perfil */}
             <div className="user-icon" onClick={toggleUserDropdown}>
               {isAuthenticated ? (
-                <img
-                  src={profileImage || logo}
-                  alt="Imagen de Perfil"
-                  className="rounded-circle"
-                  style={{ width: "30px", height: "30px", cursor: "pointer" }}
-                />
+                <img src={profileImage || logo} alt="Imagen de Perfil" className="rounded-circle" style={{ width: "30px", height: "30px", cursor: "pointer" }} />
               ) : (
                 <i className="fa fa-user-circle" style={{ fontSize: "20px", cursor: "pointer" }}></i>
               )}
@@ -152,25 +168,17 @@ function Main() {
                 </div>
               )}
             </div>
+            <div className="action_bar">
+              <Link to="/reservation1" className="btn btn_primary" onClick={handleMenuItemClick}>FIND A TABLE</Link>
+              <div className="bar" onClick={() => setNav(true)}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
           </nav>
         </div>
       </header>
-
-      {Nav && (
-        <div className={`right_sidemenu ${Nav && "active"}`}>
-          <span className="close_rightmenu" onClick={() => setNav(false)}>
-            <i className="icofont-close-circled" />
-          </span>
-          <div className="menu_inner_content">
-            <Link to="#" className="side_logo"><img src={logo} alt="logo" /></Link>
-            <ul className="contact_listing">
-              <li><p className="sub_title">Call us</p><div className="cnt_block"><Link to="tel:+11234567890">+1 123 456 7890</Link></div></li>
-              <li><p className="sub_title">Email us</p><div className="cnt_block"><Link to="mailto:hello@gmail.com">hello@gmail.com</Link></div></li>
-              <li><p className="sub_title">Find us</p><div className="cnt_block"><p>Restaurant St, Delicious City, London 9578, UK</p></div></li>
-            </ul>
-          </div>
-        </div>
-      )}
     </>
   );
 }
