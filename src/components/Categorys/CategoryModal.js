@@ -197,7 +197,7 @@ if(categoryData.name.trim() === ''){
                             </button>
                         </div>
                         <div className="col">
-                            <button className="btn btn-secondary w-100" onClick={onClose}>Cancelar</button>
+                            <button className="btn btn_primary w-100"  style={{ backgroundColor: '#6C757D', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', whiteSpace: 'nowrap' }} onClick={onClose}>Cancelar</button>
                         </div>
                     </div>
                 </div>

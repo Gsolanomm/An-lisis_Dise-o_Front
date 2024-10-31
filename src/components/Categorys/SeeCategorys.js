@@ -180,7 +180,7 @@ function SeeCategorys() {
         <>
             <Header />
 
-            <div className="content-Pane" style={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: '50px', padding: '0', overflowX:'hidden' }}>
+            <div className="content-Pane" style={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: '50px', padding: '0', marginBottom: '100px', overflowX:'hidden', height:'100%', }}>
                 <div className="Settings d-flex flex-column flex-md-row mt-5">
                     <div className="settings p-3 border-end bg-dark text-white" style={{ width: '100%', position: 'relative', marginTop: '20px' }}>
                         <table className="table table-borderless text-white">
@@ -291,6 +291,8 @@ function SeeCategorys() {
                     subCategories={subCategories}
                 />
             )}
+
+            
         </>
     );
 }
