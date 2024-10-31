@@ -109,7 +109,7 @@ function PopularDish() {
           </div>
           <div className="text-center mb-md-4">
             <Link to="/MenuList1" className="btn btn_primary">
-              hola chat
+            view full menu
             </Link>
           </div>
         </div>
