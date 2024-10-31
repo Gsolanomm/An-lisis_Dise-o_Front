@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../Auth/AxiosConfig';
+import Swal from 'sweetalert2';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -29,10 +30,11 @@ function Login() {
       localStorage.setItem('accessToken', accessToken);
 
       // Redirigir al usuario a la página principal o al dashboard
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       console.error(error);
-      setError('Credenciales incorrectas');
+      Swal.fire('Error', 'Credenciales incorrectas.', 'error');
+
     }
   };
 
