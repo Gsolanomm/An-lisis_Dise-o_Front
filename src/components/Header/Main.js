@@ -1,9 +1,10 @@
-// src/components/Main.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 import MenuImg from '../../assets/images/right_menu_table.png';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import api from '../Auth/AxiosConfig';
+import Swal from 'sweetalert2';
 
 function Main() {
   const [active, setActive] = useState();
@@ -13,13 +14,29 @@ function Main() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    setIsAuthenticated(!!token); // Establece autenticación si hay un token
+    setIsAuthenticated(!!token);
+
+    if (token) {
+      fetchProfileImage();
+    }
   }, []);
+
+  const fetchProfileImage = async () => {
+    try {
+      const response = await api.get('/auth/profile-image', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      setProfileImage(response.data.profileImageUrl || logo);
+    } catch (error) {
+      Swal.fire('Error', 'Error al cargar la imagen de perfil.', 'error');
+    }
+  };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -29,13 +46,12 @@ function Main() {
     setMenuOpen(false);
   };
 
-   //haz que se remueva el token del localStorage al hacer click en cerrar sesión
-    const handleLogout = () => {
-      localStorage.removeItem('accessToken');
-      setIsAuthenticated(false);
-      navigate('/login');
-    };
-
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    setIsAuthenticated(false);
+    setProfileImage(null);
+    navigate('/login');
+  };
 
   const handleMenuItemClick = () => {
     closeMenu();
@@ -46,7 +62,7 @@ function Main() {
     if (isAuthenticated) {
       setIsUserDropdownOpen(!isUserDropdownOpen);
     } else {
-      navigate('/login'); // Redirige a login si no está autenticado
+      navigate('/login');
     }
   };
 
@@ -60,7 +76,7 @@ function Main() {
               <img src={logo} alt="logo" />
             </Link>
             <button className={`navbar-toggler ${menuOpen ? 'open' : ''}`} type="button" onClick={toggleMenu}>
-              <span className="navbar-toggler-icon" onClick={() => setHome(Home === true ? false : true)}>
+              <span className="navbar-toggler-icon">
                 <span className={`toggle-wrap ${menuOpen ? "active" : ""}`}>
                   <span className="toggle-bar"></span>
                 </span>
@@ -115,15 +131,23 @@ function Main() {
                 </li>
               </ul>
             </div>
-            {/* Ícono de usuario fijo fuera del menú */}
+            {/* Ícono de usuario o imagen de perfil */}
             <div className="user-icon" onClick={toggleUserDropdown}>
-              <i className="fa fa-user-circle" style={{ fontSize: "20px", cursor: "pointer" }}></i>
+              {isAuthenticated ? (
+                <img
+                  src={profileImage || logo}
+                  alt="Imagen de Perfil"
+                  className="rounded-circle"
+                  style={{ width: "30px", height: "30px", cursor: "pointer" }}
+                />
+              ) : (
+                <i className="fa fa-user-circle" style={{ fontSize: "20px", cursor: "pointer" }}></i>
+              )}
               {isAuthenticated && isUserDropdownOpen && (
                 <div className="user-dropdown">
                   <ul>
                     <li><Link to="/perfil">Perfil</Link></li>
-                    
-                    <li><Link to="#" onClick={handleLogout}>Cerrar sesión</Link></li>
+                    <li><Link to="/login" onClick={handleLogout}>Cerrar sesión</Link></li>
                   </ul>
                 </div>
               )}
