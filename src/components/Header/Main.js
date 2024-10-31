@@ -115,17 +115,18 @@ function Main() {
                     </ul>
                   </div>
                 </li>
-                <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>MENU</Link>
-                  <span className="drp_btn"><i className="icofont-rounded-down" /></span>
-                  <div className="sub_menu">
-                    <ul>
-                      <li><Link to="/menulist1">Menu List 1</Link></li>
-                      <li><Link to="/menulist2">Menu List 2</Link></li>
-                      <li><Link to="/menulist3">Menu List 3</Link></li>
-                    </ul>
-                  </div>
+
+
+
+                
+                {/* Cambié la lista de menú a un botón que redirige a menulist3 */}
+                <li className="nav-item">
+                  <Link className="nav-link" to="/menulist3" onClick={handleMenuItemClick}>MENU</Link> {/* Redirige a menulist3 */}
                 </li>
+
+
+
+
                 <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
                 <li className="nav-item has_dropdown">
                   <Link className="nav-link" to="#" onClick={handleMenuItemClick}>Pages</Link>
