@@ -100,20 +100,10 @@ function Main() {
             <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>
-                    Home
-                  </Link>
-                  <span className="drp_btn">
-                    <i className="icofont-rounded-down" />
-                  </span>
-                  <div className={`sub_menu ${isDropdownOpen ? 'open' : ''}`}>
-                    <ul style={{ display: "block" }}>
-                      <li><Link to="/">Home Default</Link></li>
-                      <li><Link to="/home2">Home Slider Hero</Link></li>
-                      <li><Link to="/home3">Home Dish List</Link></li>
-                      <li><Link target="_blank" to={"https://mediacity.co.in/flavoury/04"} >Home Burger</Link></li>
-                    </ul>
-                  </div>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> {/* Redirige a la página "Home Slider Hero" */}
+                </li>
+   
                 </li>
 
 
