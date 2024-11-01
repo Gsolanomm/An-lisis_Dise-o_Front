@@ -8,18 +8,28 @@ function MenuSection3() {
   const [tabMenu, setTabMenu] = useState({ starters: true, deserts: false });
   const [showForm, setShowForm] = useState(false);
   const [dishes, setDishes] = useState([]);
-  const [editingDish, setEditingDish] = useState(null); // Estado para el platillo en edición
+  const [editingDish, setEditingDish] = useState(null); 
   const userRole = "1"; // CAMBIAR USUARIO
 
-  const fetchDishes = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchDishes = async (page = 1) => {
     try {
-      const response = await api.get('/menu/list');
-      setDishes(response.data);
+      const response = await api.get(`/menu/list?page=${page}&limit=6`);
+      setDishes(response.data.menus);
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages); 
     } catch (error) {
       console.error("Error al cargar los platillos:", error);
       Swal.fire('Error', 'No se pudo cargar los platillos.', 'error');
     }
   };
+
+  useEffect(() => {
+    fetchDishes(currentPage); 
+  }, [currentPage]);
+
 
   useEffect(() => {
     fetchDishes();
@@ -43,8 +53,8 @@ function MenuSection3() {
       text: "¡No podrás revertir esto!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#C54646',
+      cancelButtonColor: 'gray',
       confirmButtonText: 'Sí, eliminar'
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -67,36 +77,38 @@ function MenuSection3() {
     const price = event.target.price.value;
     const image = event.target.image.files[0];
     const creationDate = new Date().toISOString();
-  
+
     if (!image && !editingDish) {
       Swal.fire('Error', 'Por favor, selecciona una imagen.', 'error');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
     formData.append('price', price);
     formData.append('creationDate', creationDate);
     if (image) formData.append('image', image);
-  
+
     try {
       if (editingDish) {
         await Swal.fire({
           title: '¿Estás seguro de actualizar?',
           icon: 'warning',
           showCancelButton: true,
+          confirmButtonColor: '#C54646', 
+          cancelButtonColor: 'gray',
           confirmButtonText: 'Sí, actualizar',
           cancelButtonText: 'Cancelar'
         }).then(async (result) => {
           if (result.isConfirmed) {
             await api.put(`/menu/update/${editingDish.idMenu}`, formData);
             setDishes(dishes.map(dish => dish.idMenu === editingDish.idMenu ? { ...dish, name, description, price } : dish));
-            Swal.fire('Actualizado', 'El platillo ha sido actualizado correctamente.', 'success');
-            setShowForm(false); // Ocultar el formulario
-            setEditingDish(null); // Limpiar el platillo en edición
-            setTabMenu({ starters: true, deserts: false }); // Regresar a la pestaña del menú
-            fetchDishes(); // Volver a cargar los platillos para asegurar que el menú se muestre actualizado
+            Swal.fire('Actualizado', 'El platillo/bebida ha sido actualizado correctamente.', 'success');
+            setShowForm(false);
+            setEditingDish(null);
+            setTabMenu({ starters: true, deserts: false });
+            fetchDishes(); 
           }
         });
       } else {
@@ -112,14 +124,26 @@ function MenuSection3() {
       Swal.fire('Error', 'No se pudo guardar el platillo.', 'error');
     }
   };
-  
-  
+
+
 
   const handleTabClick = (tab) => {
     setTabMenu({
       starters: tab === 'starters',
       deserts: tab === 'deserts',
     });
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
@@ -132,7 +156,7 @@ function MenuSection3() {
               onClick={() => handleTabClick('starters')}
               to="#starters"
             >
-              Arroz
+              Arroces
             </Link>
           </li>
           {userRole === "1" && (
@@ -154,41 +178,51 @@ function MenuSection3() {
           <div className={`tab-pane fade ${tabMenu.starters ? "show active" : ""}`} id="starters" role="tabpanel">
             <div className="container">
               <div className="row">
-                {dishes.map(dish => (
-                  <div key={dish.idMenu} className="col-lg-6 col-md-12">
-                    <div className="dish_box">
-                      <div className="dish_info">
-                        <div className="dish_img">
-                          <img src={`http://localhost:5000${dish.imageUrl}`} alt={dish.name} />
-                        </div>
-                        <div className="dish_text">
-                          <h3>{dish.name}</h3>
-                          <p>{dish.description}</p>
-                          <span className="price">₡{dish.price}</span>
-                          {userRole === "1" && (
-                            <div className="dish_actions" style={{ marginTop: '10px' }}>
-                              <span
-                                style={{ fontSize: 'small', cursor: 'pointer', marginRight: '10px', color: 'coral' }}
-                                onClick={() => handleEditClick(dish)}
-                              >
-                                Actualizar
-                              </span>
-                              <span
-                                style={{ fontSize: 'small', cursor: 'pointer', color: 'tomato' }}
-                                onClick={() => handleDeleteClick(dish.idMenu)}
-                              >
-                                Eliminar
-                              </span>
-                            </div>
-                          )}
+                {dishes.length === 0 ? (
+                  <p className="text-center">No hay platillos/bebidas disponibles, por favor agrega algo nuevo.</p>
+                ) : (
+                  dishes.map(dish => (
+                    <div key={dish.idMenu} className="col-lg-6 col-md-12">
+                      <div className="dish_box">
+                        <div className="dish_info">
+                          <div className="dish_img">
+                            <img src={`http://localhost:5000${dish.imageUrl}`} alt={dish.name} />
+                          </div>
+                          <div className="dish_text">
+                            <h3>{dish.name}</h3>
+                            <p>{dish.description}</p>
+                            <span className="price">₡{dish.price}</span>
+                            {userRole === "1" && (
+                              <div className="dish_actions" style={{ marginTop: '10px' }}>
+                                <span
+                                  style={{ fontSize: 'small', cursor: 'pointer', marginRight: '10px', color: '#C54646' }}
+                                  onClick={() => handleEditClick(dish)}
+                                >
+                                  Actualizar
+                                </span>
+                                <span
+                                  style={{ fontSize: 'small', cursor: 'pointer', color: '#C54646' }}
+                                  onClick={() => handleDeleteClick(dish.idMenu)}
+                                >
+                                  Eliminar
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
-              <div className="text-center">
-                <Link to="#" className="btn btn_primary">Más</Link>
+              <div className="pagination-controls">
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+                  Anterior
+                </button>
+                <span>Página {currentPage} de {totalPages}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                  Siguiente
+                </button>
               </div>
             </div>
           </div>
