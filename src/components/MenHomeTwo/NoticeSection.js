@@ -4,7 +4,6 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
 function NoticeSection() {
     const [news, setNews] = useState([]);
     const [newArticle, setNewArticle] = useState({
@@ -14,8 +13,8 @@ function NoticeSection() {
         startDate: '',
         endDate: ''
     });
-    const [isEditing, setIsEditing] = useState(false); // Nuevo estado para modo edición
-    const [editingId, setEditingId] = useState(null); // ID del artículo que se está editando
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
         fetchNotices();
@@ -51,18 +50,16 @@ function NoticeSection() {
             const formData = new FormData();
             formData.append('title', newArticle.title);
             formData.append('description', newArticle.description);
-            formData.append('image', newArticle.image);
+            if (newArticle.image) formData.append('image', newArticle.image);
             formData.append('startDate', newArticle.startDate);
             formData.append('endDate', newArticle.endDate);
 
             if (isEditing) {
-                // Actualizar noticia existente
                 await api.put(`/notices/${editingId}`, formData);
                 Swal.fire('Éxito', 'Noticia actualizada con éxito', 'success');
                 setIsEditing(false);
                 setEditingId(null);
             } else {
-                // Agregar nueva noticia
                 await api.post('/notices', formData);
                 Swal.fire('Éxito', 'Noticia agregada con éxito', 'success');
             }
@@ -140,7 +137,7 @@ function NoticeSection() {
                                 accept="image/*"
                                 className="form-control"
                                 onChange={handleImageChange}
-                                required={!isEditing} // No requerido en modo edición
+                                required={!isEditing}
                             />
                         </div>
                         <div className="col-3">
@@ -170,7 +167,6 @@ function NoticeSection() {
                 </form>
             </div>
 
-            {/* Carrusel de noticias */}
             <div id="newsCarousel" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
                     {news.map((article, index) => (
@@ -181,7 +177,6 @@ function NoticeSection() {
                                         src={article.image} 
                                         alt={article.title} 
                                         className="d-block w-100" 
-                                        onError={(e) => e.target.style.display = 'none'} 
                                     />
                                 </div>
                                 <div className="col-md-6 text-white">
