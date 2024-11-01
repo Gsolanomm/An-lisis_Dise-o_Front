@@ -4,7 +4,7 @@ import Banner from '../MenHomeTwo/Banner'
 import Menulist from '../MenHomeTwo/Menulist'
 import VideoTwo from '../MenHomeTwo/VideoTwo'
 import MenuSection from '../MenHomeTwo/MenuSection'
-import DiscountSection from '../MenHomeTwo/DiscountSection'
+import NoticeSection from '../MenHomeTwo/NoticeSection'
 import WhoWe from '../MenHomeTwo/WhoWe'
 import Testimonial from '../MenHomeTwo/Testimonial'
 import OurTeam from '../MenHomeTwo/OurTeam'
@@ -29,7 +29,7 @@ function Main() {
                 <Menulist />
                 <VideoTwo />
                 <MenuSection />
-                <DiscountSection />
+                <NoticeSection />
                 <WhoWe />
                 <Testimonial />
                 <OurTeam />
