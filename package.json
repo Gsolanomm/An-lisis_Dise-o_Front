@@ -10,6 +10,7 @@
     "aos": "^2.3.4",
     "axios": "^1.7.7",
     "boostrap": "^2.0.0",
+    "bootstrap": "^5.3.3",
     "flavoury-react": "file:",
     "fslightbox-react": "^1.7.6",
     "gsap": "^3.12.2",
