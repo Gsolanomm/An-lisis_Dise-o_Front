@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../Header/Main';
 import InformationModal from './InformationModal';
-import axios from 'axios';
 import { createCategory } from '../models/Category';
 import { createSubCategory } from '../models/SubCategory';
 import CategoryModal from './CategoryModal';
+import api from '../Auth/AxiosConfig';
+import Swal from 'sweetalert2';
 
 function SeeCategorys() {
-    const [CategoryVisibility, setCategoryVisibility] = useState(false);
+    
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showDetailModal, setShowDetailModal] = useState(false);
+    
     const [showCategoryModal, setShowCategoryModal] = useState(false);
     const [PickedCategory, setPickedCategory] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -18,7 +18,9 @@ function SeeCategorys() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/categories', { withCredentials: true });
+
+                
+                const response =  await api.get('/categories', { withCredentials: true });
                 const formattedCategories = response.data.map(cat => 
                     createCategory(cat.idCategory, cat.name, cat.createdAt, cat.updatedAt)
                 );
@@ -41,13 +43,15 @@ function SeeCategorys() {
     
     const fetchSubCategories = async (category) => {
         try {
-            const response = await axios.get(`http://localhost:5000/subcategories/${category.idCategory}`, { withCredentials: true });
+            const response = await api.get(`/subcategories/${category.idCategory}`, { withCredentials: true });
             const formattedSubCategories = response.data.map(subCat =>
                 createSubCategory(subCat.idSubCategory, subCat.idCategory, subCat.name, subCat.createdAt, subCat.updatedAt)
             );
             setSubCategories(formattedSubCategories);
+            return formattedSubCategories;
         } catch (error) {
             console.error('Error al obtener subcategorías:', error);
+            return [];
         }
     };
 
@@ -67,15 +71,53 @@ function SeeCategorys() {
         setPickedCategory(null);
     };
 
+    const openDetailModal = async (category) => {
+      const subCategories =  await fetchSubCategories(category);
+        setPickedCategory(category);
+        levantarModal(category,subCategories)
+
+    };
+
+    const levantarModal = (category,subCategories) =>{
+        
+        Swal.fire({
+            title: 'Detalles de la Categoría',
+            html: `
+                <p><strong>Nombre:</strong> ${category.name}</p>
+                <p><strong>Fecha de Creación:</strong> ${formatDate(category.createdAt)}</p>
+                <p><strong>Última Actualización:</strong> ${formatDate(category.updatedAt)}</p>
+                <hr />
+                <h5>Lista de Subcategorías:</h5>
+                <div style="max-height: 150px; overflow-y: auto;">
+                    ${subCategories.length > 0 ? subCategories.map(subCategory => `
+                        <div>
+                            <p><strong>Nombre:</strong> ${subCategory.name}</p>
+                            <p><strong>Fecha de Creación:</strong> ${formatDate(subCategory.createdAt)}</p>
+                            <p><strong>Última Actualización:</strong> ${formatDate(subCategory.updatedAt)}</p>
+                            <hr />
+                        </div>
+                    `).join('') : '<p>No hay subcategorías disponibles.</p>'}
+                </div>
+            `,
+            confirmButtonText: 'Cerrar',
+            confirmButtonColor: '#6C757D',
+
+           
+            
+
+        });
+    }
+    
+
     const handleSubmitCategory = async (categoryData) => {
         if (PickedCategory) {
             try {
-                await axios.put(`http://localhost:5000/categories/${PickedCategory.idCategory}`, categoryData, { withCredentials: true });
+                await api.put(`/categories/${PickedCategory.idCategory}`, categoryData, { withCredentials: true });
                 setCategories(categories.map(cat => cat.idCategory === PickedCategory.idCategory ? { ...cat, name: categoryData.name } : cat));
 
                 const subcategoryChangePromise = subCategories.map(subCategory => {
                     if (!categoryData.subCategories.find(sc => sc.idSubCategory === subCategory.idSubCategory)) {
-                        return axios.delete(`http://localhost:5000/subcategories/${subCategory.idSubCategory}`, { withCredentials: true });
+                        return api.delete(`/subcategories/${subCategory.idSubCategory}`, { withCredentials: true });
                     }
                 });
 
@@ -88,8 +130,8 @@ function SeeCategorys() {
 
                     if (existingSubCategory && existingSubCategory.name !== subCategory.name) {
                         try {
-                            await axios.put(
-                                `http://localhost:5000/subcategories/${subCategory.idSubCategory}`,
+                            await api.put(
+                                `/subcategories/${subCategory.idSubCategory}`,
                                 { 
                                     name: existingSubCategory.name, 
                                     updatedAt: new Date()  // Asegúrate de que esto se esté enviando
@@ -106,7 +148,7 @@ function SeeCategorys() {
 
                 const newSubCategoryPromises = categoryData.subCategories.map(subCategory => {
                     if (!subCategory.idSubCategory || subCategory.idSubCategory.toString().startsWith('temp-')) {
-                        return axios.post(`http://localhost:5000/subcategories/`, {
+                        return api.post(`/subcategories/`, {
                             idCategory: PickedCategory.idCategory,
                             name: subCategory.name,
                         }, { withCredentials: true });
@@ -121,7 +163,7 @@ function SeeCategorys() {
         } else {
             // Agregar nueva categoría
             try {
-                const response = await axios.post('http://localhost:5000/categories', categoryData, { withCredentials: true });
+                const response = await api.post('/categories', categoryData, { withCredentials: true });
                 const newCategory = response.data.category; // Obtener la categoría recién creada
                 setCategories([...categories, newCategory]);
 
@@ -129,7 +171,7 @@ function SeeCategorys() {
 
                 // Crear promesas para las subcategorías
                 const subCategoryPromises = categoryData.subCategories.map(subCategory => {
-                    return axios.post(`http://localhost:5000/subcategories/`, {
+                    return api.post(`/subcategories/`, {
                         idCategory: idCategory,
                         name: subCategory.name,
                     }, { withCredentials: true });
@@ -145,30 +187,47 @@ function SeeCategorys() {
         closeCategoryModal();
     };
 
-    const openDetailModal = async (category) => {
-        setPickedCategory(category);
-        await fetchSubCategories(category);
-        setShowDetailModal(true);
-    };
+   
+
+
 
     const openDeleteModal = (category) => {
         setPickedCategory(category);
-        setShowDeleteModal(true);
+        Swal.fire({
+            title: `¿Estás seguro que quieres eliminar la categoría "${category.name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#C83F46',
+            cancelButtonColor: '#6C757D',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteCategory(category); // Asegúrate de que deleteCategory sea una función async
+                    Swal.fire(
+                        'Eliminado',
+                        `La categoría "${category.name}" ha sido eliminada correctamente.`,
+                        'success'
+                    );
+                } catch (error) {
+                    Swal.fire('Error', 'Hubo un problema al eliminar la categoría.', 'error');
+                }
+            }
+        });
     };
+    
 
     const closeDeleteModal = () => {
         setShowDeleteModal(false);
         setPickedCategory(null);
     };
 
-    const closeDetailModal = () => {
-        setShowDetailModal(false);
-        setPickedCategory(null);
-    };
+    
 
     const deleteCategory = async (category) => {
         try {
-            await axios.delete(`http://localhost:5000/categories/${category.idCategory}`, { withCredentials: true });
+            await api.delete(`/categories/${category.idCategory}`, { withCredentials: true });
             setCategories(categories.filter(c => c.idCategory !== category.idCategory));
             closeDeleteModal();
         } catch (error) {
@@ -178,32 +237,7 @@ function SeeCategorys() {
 
     return (
         <>
-            <Header />
-
-            <div className="content-Pane" style={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: '50px', padding: '0', overflowX:'hidden' }}>
-                <div className="Settings d-flex flex-column flex-md-row mt-5">
-                    <div className="settings p-3 border-end bg-dark text-white" style={{ width: '100%', position: 'relative', marginTop: '20px' }}>
-                        <table className="table table-borderless text-white">
-                            <thead>
-                                <tr>
-                                    <th className="text-center">Configuraciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="mt-2">
-                                    <td
-                                        className="btn btn_primary text-center w-100"
-                                        onClick={() => setCategoryVisibility(!CategoryVisibility)}
-                                        style={{ backgroundColor: '#C83F46', color: 'white', fontWeight: 'bold' }}
-                                    >
-                                        Categorías
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {CategoryVisibility && (
+   
                         <div className="container flex-grow-1 bg-dark text-white p-3" style={{ width: '100%', marginTop: '20px' }}>
                             <div className="categorys-header d-flex justify-content-between align-items-center mb-4">
                                 <h1 className="text-white m-0">Categorías</h1>
@@ -242,9 +276,8 @@ function SeeCategorys() {
                                 </tbody>
                             </table>
                         </div>
-                    )}
-                </div>
-            </div>
+                  
+              
 
             {showDeleteModal && (
                 <InformationModal
@@ -255,32 +288,7 @@ function SeeCategorys() {
                 />
             )}
 
-            {showDetailModal && (
-                <InformationModal
-                    text={
-                        <>
-                            <div>
-                                <h6>Detalles de la Categoría</h6>
-                                <p><strong>Nombre:</strong> {PickedCategory?.name}</p>
-                                <p><strong>Fecha de Creación:</strong> {formatDate(PickedCategory?.createdAt)}</p>
-                                <p><strong>Última Actualización:</strong> {formatDate(PickedCategory?.updatedAt)}</p>
-                                <hr />
-                                <h5>Lista de Subcategorías:</h5>
-                                {subCategories.length > 0 ? subCategories.map(subCategory => (
-                                    <div key={subCategory.idSubCategory}>
-                                        <p > <strong>Nombre:</strong> {subCategory.name}</p>
-                                        <p><strong>Fecha de Creación:</strong> {formatDate(subCategory.createdAt)}</p>
-                                        <p><strong>Última Actualización:</strong> {formatDate(subCategory.updatedAt)}</p>
-                                        <hr />
-                                    </div>
-                                )) : <p>No hay subcategorías disponibles.</p>}
-                            </div>
-                        </>
-                    }
-                    onCancel={closeDetailModal}
-                    mode={2}
-                />
-            )}
+            
 
             {showCategoryModal && (
                 <CategoryModal
@@ -291,6 +299,8 @@ function SeeCategorys() {
                     subCategories={subCategories}
                 />
             )}
+
+            
         </>
     );
 }
