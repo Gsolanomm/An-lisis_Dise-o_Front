@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes,  } from 'react-router-dom';
+import { Route, Routes, } from 'react-router-dom';
 import Home from '../components/Home/Main'
 import HomeTwo from '../components/HomeTwo/Main'
 import HomeThree from '../components/HomeThree/Main'
@@ -21,35 +21,42 @@ import ProtectedRoute from '../components/Auth/ProtectedRoute'
 import Register from '../components/Register/Main'
 import Profile from '../components/Profile/Main'
 
+import Template from '../components/Templates/Main';
+import Recipe from './../components/Dish/Recipe';
+import Review from '../components/Dish/Review';
+
 function Index() {
-    
+
   return (
     <>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home2" element={<HomeTwo />} />
-          <Route path="/home3" element={<HomeThree />} />
-          <Route path="/menulist1" element={<MenuList1 />} />
-          <Route path="/menulist2" element={<MenuList2 />} />
-          <Route path="/menulist3" element={<MenuList3 />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/reservation1" element={<Reserv1 />} />
-          <Route path="/reservation2" element={<Resrv2 />} />
-          <Route path="/review" element={<Reviews />} />
-          <Route path="/ourchef" element={<OurChef />} />
-          <Route path="/contact" element={<Contact/>}/>
-          <Route path="/bloglist" element={<BlogList />} />
-          <Route path="/blogdetail" element={<BlogDetail/>} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/Admin_Categorys" element={<ProtectedRoute allowedRoles={"administrador"} >
-            <Category />
-          </ProtectedRoute>} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/perfil' element={<ProtectedRoute >
-            <Profile />
-          </ProtectedRoute>} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home2" element={<HomeTwo />} />
+        <Route path="/home3" element={<HomeThree />} />
+        <Route path="/menulist1" element={<MenuList1 />} />
+        <Route path="/menulist2" element={<MenuList2 />} />
+        <Route path="/menulist3" element={<MenuList3 />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/reservation1" element={<Reserv1 />} />
+        <Route path="/reservation2" element={<Resrv2 />} />
+        <Route path="/review" element={<Reviews />} />
+        <Route path="/ourchef" element={<OurChef />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/bloglist" element={<BlogList />} />
+        <Route path="/blogdetail" element={<BlogDetail />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/Admin_Categorys" element={<ProtectedRoute allowedRoles={"administrador"} >
+          <Category />
+        </ProtectedRoute>} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/perfil' element={<ProtectedRoute >
+          <Profile />
+        </ProtectedRoute>} />
+
+        <Route path='/dish/:idDish/recipe' element={<Template><Recipe /></Template>} />
+        <Route path='/dish/:idDish/review' element={<Template><Review /></Template>} />
+      </Routes>
     </>
   )
 }
