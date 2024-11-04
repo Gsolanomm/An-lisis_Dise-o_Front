@@ -23,7 +23,7 @@ import Profile from '../components/Profile/Main'
 
 import Template from '../components/Templates/Main';
 import Recipe from './../components/Dish/Recipe';
-import Review from '../components/Dish/Review';
+import Review from '../components/Dish/Reviews';
 
 function Index() {
 
