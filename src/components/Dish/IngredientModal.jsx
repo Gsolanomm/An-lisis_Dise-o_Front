@@ -62,7 +62,12 @@ function IngredientModal({ ingredient, onClose, onAddIngredient }) {
             justifyContent: 'center',
         }}>
 
-            <form className='modal-content text-white p-4' style={{ width: '400px', borderRadius: '20px', backgroundColor: '#000000', border: '5px solid #696969' }} onSubmit={handleSubmit}>
+            <form className='modal-content text-white p-4' style={{
+                width: '400px',
+                borderRadius: '20px',
+                backgroundColor: '#000000',
+                border: '5px solid #696969'
+            }} onSubmit={handleSubmit}>
 
                 <div className="section_title text-center">
                     <h2>{ingredient ? 'Editar ingrediente' : 'Añadir ingrediente'}</h2>
