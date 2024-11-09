@@ -20,6 +20,7 @@ import Login from '../components/Login/Main'
 import ProtectedRoute from '../components/Auth/ProtectedRoute'
 import Register from '../components/Register/Main'
 import Profile from '../components/Profile/Main'
+import OrdersMenu from '../components/Orders/Main';
 
 function Index() {
     
@@ -44,6 +45,11 @@ function Index() {
           <Route path="/Admin_Categorys" element={<ProtectedRoute allowedRoles={"administrador"} >
             <Category />
           </ProtectedRoute>} />
+<Route path="/OrderMenu" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
+            <OrdersMenu />
+          </ProtectedRoute>} />
+
+
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/perfil' element={<ProtectedRoute >

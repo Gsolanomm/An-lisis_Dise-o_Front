@@ -118,20 +118,13 @@ function Main() {
 
 
                 <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
+                {isAuthenticated && isAdmin && (
                 <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>Pages</Link>
-                  <span className="drp_btn"><i className="icofont-rounded-down" /></span>
-                  <div className="sub_menu">
-                    <ul>
-                      <li><Link to="/bloglist">Blog List </Link></li>
-                      <li><Link to="/blogdetail">Blog Details</Link></li>
-                      <li><Link to="/reservation1">Reservation 1</Link></li>
-                      <li><Link to="/reservation2">Reservation 2</Link></li>
-                      <li><Link to="/review">Reviews</Link></li>
-                      <li><Link to="/gallery">Gallery</Link></li>
-                    </ul>
-                  </div>
+                  <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
+                 
                 </li>
+   )}
+
                 <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
                 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
