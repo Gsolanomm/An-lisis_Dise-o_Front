@@ -8,8 +8,8 @@ function MenuSection3() {
   const [tabMenu, setTabMenu] = useState({ starters: true, deserts: false });
   const [showForm, setShowForm] = useState(false);
   const [dishes, setDishes] = useState([]);
-  const [editingDish, setEditingDish] = useState(null); 
-  const userRole = "1"; // CAMBIAR USUARIO
+  const [editingDish, setEditingDish] = useState(null);
+  const userRole = "1";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -19,7 +19,7 @@ function MenuSection3() {
       const response = await api.get(`/menu/list?page=${page}&limit=6`);
       setDishes(response.data.menus);
       setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages); 
+      setTotalPages(Math.max(response.data.totalPages, 1));
     } catch (error) {
       console.error("Error al cargar los platillos:", error);
       Swal.fire('Error', 'No se pudo cargar los platillos.', 'error');
@@ -27,22 +27,17 @@ function MenuSection3() {
   };
 
   useEffect(() => {
-    fetchDishes(currentPage); 
+    fetchDishes(currentPage);
   }, [currentPage]);
 
-
-  useEffect(() => {
-    fetchDishes();
-  }, []);
-
   const handleAddClick = () => {
-    setEditingDish(null); // Limpiar el platillo en edición
+    setEditingDish(null);
     setShowForm(true);
     setTabMenu({ starters: false, deserts: true });
   };
 
   const handleEditClick = (dish) => {
-    setEditingDish(dish); // Guardar el platillo en edición
+    setEditingDish(dish);
     setShowForm(true);
     setTabMenu({ starters: false, deserts: true });
   };
@@ -60,7 +55,7 @@ function MenuSection3() {
       if (result.isConfirmed) {
         try {
           await api.delete(`/menu/delete/${id}`);
-          setDishes(dishes.filter(dish => dish.idMenu !== id));
+          fetchDishes(currentPage); // Actualizar la lista de platillos después de eliminar
           Swal.fire('Eliminado', 'El platillo ha sido eliminado.', 'success');
         } catch (error) {
           console.error("Error al eliminar el platillo:", error);
@@ -96,26 +91,25 @@ function MenuSection3() {
           title: '¿Estás seguro de actualizar?',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#C54646', 
+          confirmButtonColor: '#C54646',
           cancelButtonColor: 'gray',
           confirmButtonText: 'Sí, actualizar',
           cancelButtonText: 'Cancelar'
         }).then(async (result) => {
           if (result.isConfirmed) {
             await api.put(`/menu/update/${editingDish.idMenu}`, formData);
-            setDishes(dishes.map(dish => dish.idMenu === editingDish.idMenu ? { ...dish, name, description, price } : dish));
+            fetchDishes(currentPage); // Actualizar la lista de platillos después de editar
             Swal.fire('Actualizado', 'El platillo/bebida ha sido actualizado correctamente.', 'success');
             setShowForm(false);
             setEditingDish(null);
             setTabMenu({ starters: true, deserts: false });
-            fetchDishes(); 
           }
         });
       } else {
-        const response = await api.post('/menu/add', formData, {
+        await api.post('/menu/add', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        setDishes([...dishes, response.data]);
+        fetchDishes(1); // Cargar desde la primera página al agregar un nuevo platillo
         Swal.fire('Éxito', 'Platillo agregado correctamente.', 'success');
       }
       event.target.reset();
@@ -124,8 +118,6 @@ function MenuSection3() {
       Swal.fire('Error', 'No se pudo guardar el platillo.', 'error');
     }
   };
-
-
 
   const handleTabClick = (tab) => {
     setTabMenu({
@@ -245,6 +237,8 @@ function MenuSection3() {
                         placeholder="Nombre del plato"
                         defaultValue={editingDish?.name || ""}
                         required
+                        pattern="^[A-Za-z0-9.,:\- ]*$"
+                        title="El nombre solo puede contener letras, números, espacios, comas, puntos, dos puntos, y guiones."
                       />
                     </div>
                     <div className="form-group">
@@ -256,6 +250,8 @@ function MenuSection3() {
                         defaultValue={editingDish?.description || ""}
                         required
                         style={{ height: "100px" }}
+                        pattern="^[A-Za-z0-9.,:\- ]*$"
+                        title="La descripción solo puede contener letras, números, espacios, comas, puntos, dos puntos, y guiones."
                       ></textarea>
                     </div>
                     <div className="form-group">
@@ -288,7 +284,7 @@ function MenuSection3() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
 
