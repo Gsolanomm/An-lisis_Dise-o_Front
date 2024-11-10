@@ -30,25 +30,9 @@ function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
     const handleDeleteSubCategory = (index) => {
         const subCategoryToDelete = selectedSubCategories[index];
 
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: `¿Quieres eliminar la subcategoría "${subCategoryToDelete.name}"?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#C83F46',
-            cancelButtonColor: '#6C757D',
-            confirmButtonText: 'Eliminar',
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
+      
                 setSelectedSubCategories(selectedSubCategories.filter((_, i) => i !== index));
-                Swal.fire(
-                    'Eliminado!',
-                    'La subcategoría ha sido eliminada.',
-                    'success'
-                );
-            }
-        });
+              
     };
 
     const handleEditSubCategory = (subCategory) => {
@@ -70,7 +54,7 @@ function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
                 setSelectedSubCategories(selectedSubCategories.map(subCat => 
                     subCat.idSubCategory === subCategory.idSubCategory ? { ...subCat, name: newName } : subCat
                 ));
-                Swal.fire('Guardado!', 'El nombre de la subcategoría ha sido actualizado.', 'success');
+              
             }
         });
     };
