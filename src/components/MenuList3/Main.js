@@ -15,6 +15,7 @@ function Main() {
 
     <div className='page_wrapper'>
       <Header />
+      <MenuList3Bred />
       <MenuSection3/>
       <Footer />
     </div>
