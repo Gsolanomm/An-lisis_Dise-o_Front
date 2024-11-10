@@ -7,9 +7,7 @@ import { createCategory } from '../models/Category';
 function MenuSection3() {
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [dishes, setDishes] = useState([]);
-  const [editingDish, setEditingDish] = useState(null); 
-  const userRole = "1"; // CAMBIAR USUARIO
-
+  const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -38,6 +36,8 @@ function MenuSection3() {
           createCategory(cat.idCategory, cat.name, cat.createdAt, cat.updatedAt)
         );
         setCategories(formattedCategories);
+
+        // Si hay al menos una categoría, selecciona la primera y carga sus platillos
         if (formattedCategories.length > 0) {
           setActiveCategoryId(formattedCategories[0].idCategory);
         }
@@ -59,119 +59,46 @@ function MenuSection3() {
       const response = await api.get(`/dish/list?idCategory=${categoryId}&page=${page}&limit=6`);
       setDishes(response.data.dishes || []);
       setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages); 
+      setTotalPages(response.data.totalPages || 1);
     } catch (error) {
       console.error('Error al cargar los platillos:', error);
       Swal.fire('Error', 'No se pudo cargar los platillos.', 'error');
+      setDishes([]);
+      setTotalPages(1);
     }
   };
 
-  useEffect(() => {
-    fetchDishes(currentPage); 
-  }, [currentPage]);
+  const handleDeleteClick = async (dishId) => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡Este platillo será eliminado!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
 
-
-  useEffect(() => {
-    fetchDishes();
-  }, []);
-
-  const handleAddClick = () => {
-    setEditingDish(null); // Limpiar el platillo en edición
-    setShowForm(true);
-    setTabMenu({ starters: false, deserts: true });
-  };
-
-  const handleEditClick = (dish) => {
-    setEditingDish(dish); // Guardar el platillo en edición
-    setShowForm(true);
-    setTabMenu({ starters: false, deserts: true });
-  };
-
-  const handleDeleteClick = (id) => {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#C54646',
-      cancelButtonColor: 'gray',
-      confirmButtonText: 'Sí, eliminar'
-    }).then(async (result) => {
       if (result.isConfirmed) {
-        try {
-          await api.delete(`/menu/delete/${id}`);
-          setDishes(dishes.filter(dish => dish.idMenu !== id));
+        const response = await api.delete(`/dish/delete/${dishId}`);
+        if (response.status === 200) {
           Swal.fire('Eliminado', 'El platillo ha sido eliminado.', 'success');
-        } catch (error) {
-          console.error("Error al eliminar el platillo:", error);
-          Swal.fire('Error', 'No se pudo eliminar el platillo.', 'error');
+          fetchDishes(activeCategoryId, currentPage);
         }
       }
-    });
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const name = event.target.name.value;
-    const description = event.target.description.value;
-    const price = event.target.price.value;
-    const image = event.target.image.files[0];
-    const creationDate = new Date().toISOString();
-
-    if (!image && !editingDish) {
-      Swal.fire('Error', 'Por favor, selecciona una imagen.', 'error');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('creationDate', creationDate);
-    if (image) formData.append('image', image);
-
-    try {
-      if (editingDish) {
-        await Swal.fire({
-          title: '¿Estás seguro de actualizar?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#C54646', 
-          cancelButtonColor: 'gray',
-          confirmButtonText: 'Sí, actualizar',
-          cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            await api.put(`/menu/update/${editingDish.idMenu}`, formData);
-            setDishes(dishes.map(dish => dish.idMenu === editingDish.idMenu ? { ...dish, name, description, price } : dish));
-            Swal.fire('Actualizado', 'El platillo/bebida ha sido actualizado correctamente.', 'success');
-            setShowForm(false);
-            setEditingDish(null);
-            setTabMenu({ starters: true, deserts: false });
-            fetchDishes(); 
-          }
-        });
-      } else {
-        const response = await api.post('/menu/add', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        setDishes([...dishes, response.data]);
-        Swal.fire('Éxito', 'Platillo agregado correctamente.', 'success');
-      }
-      event.target.reset();
     } catch (error) {
       Swal.fire('Error', 'No se pudo eliminar el platillo.', 'error');
       console.error('Error al eliminar el platillo:', error);
     }
   };
 
+  const handleEditClick = (dish) => {
+    navigate('/configurationmenu', { state: { dish } });
+  };
 
-
-  const handleTabClick = (tab) => {
-    setTabMenu({
-      starters: tab === 'starters',
-      deserts: tab === 'deserts',
-    });
+  const handleCategoryClick = (categoryId) => {
+    setActiveCategoryId(categoryId);
+    setCurrentPage(1);
   };
 
   const handleNextPage = () => {
@@ -255,70 +182,15 @@ function MenuSection3() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className={`tab-pane fade ${tabMenu.deserts ? "show active" : ""}`} id="deserts" role="tabpanel">
-            <div className="container">
-              <div className="row justify-content-center">
-                {showForm && (
-                  <form
-                    className="add-dish-form"
-                    style={{ marginTop: "20px", maxWidth: "500px", width: "100%" }}
-                    onSubmit={handleSubmit}
-                  >
-                    <div className="form-group">
-                      <label htmlFor="name">Nombre:</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        placeholder="Nombre del plato"
-                        defaultValue={editingDish?.name || ""}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="description">Descripción:</label>
-                      <textarea
-                        className="form-control"
-                        id="description"
-                        placeholder="Descripción del plato"
-                        defaultValue={editingDish?.description || ""}
-                        required
-                        style={{ height: "100px" }}
-                      ></textarea>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="price">Precio:</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="price"
-                        placeholder="Precio en ₡"
-                        defaultValue={editingDish?.price || ""}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="image">Imagen:</label>
-                      <input
-                        type="file"
-                        className="form-control-file"
-                        id="image"
-                        accept="image/*"
-                      />
-                    </div>
-                    <button type="submit" className="btn btn_primary">
-                      {editingDish ? "Actualizar Platillo" : "Agregar Platillo"}
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-          </div>
+          ))}
+        </div>
+        <div className="pagination">
+          <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button onClick={handleNextPage} disabled={currentPage === totalPages}>Siguiente</button>
         </div>
       </div>
-    </section >
+    </section>
   );
 }
 
