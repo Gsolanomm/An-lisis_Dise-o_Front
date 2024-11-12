@@ -6,6 +6,7 @@ import HomeThree from '../components/HomeThree/Main'
 import MenuList1 from '../components/MenuList1/Main'
 import MenuList2 from '../components/MenuList2/Main'
 import MenuList3 from '../components/MenuList3/Main'
+import ConfigurationMenu from '../components/ConfigurationMenu/Main'
 import About from '../components/About/Main'
 import Reserv1 from '../components/Reserv1/Main'
 import Resrv2 from '../components/Resrv2/Main'
@@ -33,7 +34,8 @@ function Index() {
           <Route path="/home3" element={<HomeThree />} />
           <Route path="/menulist1" element={<MenuList1 />} />
           <Route path="/menulist2" element={<MenuList2 />} />
-          <Route path="/menulist3" element={<MenuList3 />} />
+          <Route path="/menu" element={<MenuList3 />} />
+          <Route path="/configurationmenu" element={<ConfigurationMenu />} />
           <Route path="/about" element={<About />} />
           <Route path="/reservation1" element={<Reserv1 />} />
           <Route path="/reservation2" element={<Resrv2 />} />
