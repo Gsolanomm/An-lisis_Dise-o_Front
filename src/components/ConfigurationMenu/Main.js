@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react'
 import Header from '../Header/Main'
 import Footer from '../Footer/Main'
-import MenuSection3 from '../MenMenuList/MenuSection3'
+import ConfigurationMenu from '../MenMenuList/ConfigurationMenu'
 import Aos from 'aos'
 
 function Main() {
@@ -15,7 +15,7 @@ function Main() {
 
     <div className='page_wrapper'>
       <Header />
-      <MenuSection3/>
+      <ConfigurationMenu/>
       <Footer />
     </div>
   )
