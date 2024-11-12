@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
-import MenuImg from '../../assets/images/right_menu_table.png';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import api from '../Auth/AxiosConfig';
 import Swal from 'sweetalert2';
@@ -15,7 +14,7 @@ function Main() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar si el usuario es administrador
+  const [isAdmin, setIsAdmin] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -101,41 +100,35 @@ function Main() {
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item has_dropdown">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> {/* Redirige a la página "Home Slider Hero" */}
+                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> 
                 </li>
    
                 </li>
 
-
-
-                
-                {/* Cambié la lista de menú a un botón que redirige a menulist3 */}
                 <li className="nav-item">
-                  <Link className="nav-link" to="/menulist3" onClick={handleMenuItemClick}>MENU</Link> {/* Redirige a menulist3 */}
+                  <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
                 </li>
 
 
 
 
                 <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
+                {isAuthenticated && isAdmin && (
                 <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="#" onClick={handleMenuItemClick}>Pages</Link>
-                  <span className="drp_btn"><i className="icofont-rounded-down" /></span>
-                  <div className="sub_menu">
-                    <ul>
-                      <li><Link to="/bloglist">Blog List </Link></li>
-                      <li><Link to="/blogdetail">Blog Details</Link></li>
-                      <li><Link to="/reservation1">Reservation 1</Link></li>
-                      <li><Link to="/reservation2">Reservation 2</Link></li>
-                      <li><Link to="/review">Reviews</Link></li>
-                      <li><Link to="/gallery">Gallery</Link></li>
-                    </ul>
-                  </div>
+                  <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
+                 
                 </li>
+   )}
+
                 <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
                 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Ajustes</Link>
+                    <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
+                  </li>
+                )}
+                {isAuthenticated && isAdmin && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
                   </li>
                 )}
                 
@@ -144,7 +137,6 @@ function Main() {
                 </li>
               </ul>
             </div>
-            {/* Ícono de usuario o imagen de perfil */}
             <div className="user-icon" onClick={toggleUserDropdown}>
               {isAuthenticated ? (
                 <img src={profileImage || logo} alt="Imagen de Perfil" className="rounded-circle" style={{ width: "30px", height: "30px", cursor: "pointer" }} />
