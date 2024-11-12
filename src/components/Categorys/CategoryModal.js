@@ -70,9 +70,20 @@ function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
                 text: 'Nombre de categoría inválido',
             });
         } else {
+
+Swal.fire({
+    icon: 'question',
+    title: '¿Estás seguro?',
+    text: category ? '¿Quieres guardar los cambios?' : '¿Quieres añadir esta categoría?',
+    showCancelButton: true,
+    confirmButtonText: 'Sí',
+    cancelButtonText: 'No',
+}).then((result) => {
+
             onSubmit(categoryData);
             onClose();
         }
+    )};
     };
 
     if (!isOpen) return null;
@@ -97,45 +108,49 @@ function CategoryModal({ isOpen, onClose, onSubmit, category, subCategories }) {
                     <h2>{category ? 'Editar Categoría' : 'Añadir Categoría'}</h2>
                 </div>
                 <div className="form_inner">
-                    <div className="form-group mb-3">
-                        <input
-                            type="text"
-                            placeholder="Nombre"
-                            value={name}
-                            required
-                            onChange={(e) => setName(e.target.value)}
-                            className="form-control bg-dark text-white border rounded-2 p-3"
-                            style={{
-                                height: '55px',
-                                border: '2px solid var(--border-grey)',
-                                borderRadius: '10px',
-                                fontWeight: 500,
-                                backgroundColor: '#222',
-                                color: 'var(--text-white)',
-                                padding: '.375rem .75rem',
-                                fontSize: '1rem',
-                            }}
-                        />
-                    </div>
+                <div className="form-group mb-3">
+    <label htmlFor="name" className="text-white">Nombre de la categoría</label>
+    <input
+        type="text"
+        id="name"
+        placeholder="Nombre"
+        value={name}
+        required
+        onChange={(e) => setName(e.target.value)}
+        className="form-control bg-dark text-white border rounded-2 p-3"
+        style={{
+            height: '55px',
+            border: '2px solid var(--border-grey)',
+            borderRadius: '10px',
+            fontWeight: 500,
+            backgroundColor: '#222',
+            color: 'var(--text-white)',
+            padding: '.375rem .75rem',
+            fontSize: '1rem',
+        }}
+    />
+</div>
 
-                    <h3 className="text-white">Subcategorías</h3>
-                    <div className="subCategory-section form-group d-flex mb-3">
-                        <input
-                            type="text"
-                            placeholder="Nombre de subcategoría"
-                            value={subCategoryName}
-                            onChange={(e) => setSubCategoryName(e.target.value)}
-                            className="form-control bg-dark text-white border rounded-2 p-3 me-2"
-                            style={{
-                                height: '55px',
-                                border: '2px solid var(--border-grey)',
-                                borderRadius: '10px',
-                                fontWeight: 500,
-                                backgroundColor: '#222',
-                                color: 'var(--text-white)',
-                                marginRight: '20px',
-                            }}
-                        />
+<h3 className="text-white">Subcategorías</h3>
+<label htmlFor="name" className="text-white">Nombre de la categoría</label>
+<div className="subCategory-section form-group d-flex mb-3">
+     <input
+        type="text"
+        id="subCategoryName"
+        placeholder="Nombre de subcategoría"
+        value={subCategoryName}
+        onChange={(e) => setSubCategoryName(e.target.value)}
+        className="form-control bg-dark text-white border rounded-2 p-3 me-2"
+        style={{
+            height: '55px',
+            border: '2px solid var(--border-grey)',
+            borderRadius: '10px',
+            fontWeight: 500,
+            backgroundColor: '#222',
+            color: 'var(--text-white)',
+            marginRight: '20px',
+        }}
+    />
                         <button className="btn btn_primary" style={{ backgroundColor: '#C83F46', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', minWidth: '80px', whiteSpace: 'nowrap' }} onClick={handleAddSubCategory}>
                             Añadir
                         </button>
