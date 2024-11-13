@@ -1,0 +1,32 @@
+/* Fondo negro para toda la tabla */
+.table {
+    background-color: black !important;
+    color: white !important;
+    border-collapse: collapse; /* Colapsa bordes */
+  }
+  
+  /* Fondo negro para los encabezados de la tabla */
+  .table th {
+    background-color: black !important;
+    color: white !important;
+    border: 1px solid white !important; /* Bordes negros */
+  }
+  
+  /* Fondo negro y bordes negros para las celdas */
+  .table td {
+    background-color: black !important;
+    color: white !important;
+    border: 1px solid white !important; /* Bordes negros */
+  }
+  
+  /* Quita cualquier sombreado o efecto de hover */
+  .table tr:hover {
+    background-color: black !important;
+  }
+  
+  /* Elimina cualquier estilo adicional de otros frameworks como Bootstrap */
+  .table th, .table td {
+    padding: 8px; /* Opcional: Ajusta el espacio dentro de cada celda */
+    text-align: center;
+  }
+  

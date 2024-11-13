@@ -14,7 +14,8 @@ function Main() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false); 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState('');
 
   const navigate = useNavigate();
 
@@ -33,7 +34,8 @@ function Main() {
       const response = await api.get('/auth/verify-role', {
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
-      setIsAdmin(response.data.role === 'administrador'); // Comprueba si el rol es "administrador"
+      setIsAdmin(response.data.role === 'administrador');
+      setUserRole(response.data.role); // Guarda el rol del usuario
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'Error al verificar el rol del usuario.', 'error');
@@ -64,6 +66,7 @@ function Main() {
     setIsAuthenticated(false);
     setProfileImage(null);
     setIsAdmin(false); // Restablece el estado de administrador al cerrar sesión
+    setUserRole('');
     navigate('/login');
   };
 
@@ -98,27 +101,28 @@ function Main() {
             </button>
             <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto">
-                <li className="nav-item has_dropdown">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> 
-                </li>
-   
+                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link>
                 </li>
 
                 <li className="nav-item">
                   <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
                 </li>
 
-
-
-
                 <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
+
+                {/* Condición para mostrar "Reservaciones" solo a clientes o administradores */}
+                {isAuthenticated && (isAdmin || userRole === 'cliente') && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
+                  </li>
+                )}
+
                 {isAuthenticated && isAdmin && (
-                <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
-                 
-                </li>
-   )}
+                  <li className="nav-item has_dropdown">
+                    <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
+                  </li>
+                )}
 
                 <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
                 {isAuthenticated && isAdmin && (
@@ -131,7 +135,13 @@ function Main() {
                     <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
                   </li>
                 )}
-                
+                {isAuthenticated && isAdmin && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/listreservation" onClick={handleMenuItemClick}>Lista de reservaciones</Link>
+                  </li>
+                )}
+
+
                 <li className="nav-item contact_number">
                   <Link className="nav-link" to="tel:+18001234578"><span>Book a table :</span> +1 800 123 45 78</Link>
                 </li>
@@ -152,7 +162,7 @@ function Main() {
                 </div>
               )}
             </div>
-          
+
           </nav>
         </div>
       </header>
