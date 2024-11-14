@@ -110,10 +110,11 @@ function Main() {
                   </li>
                 )}
 
+{isAuthenticated  && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
                   </li>
-                
+)}
 
 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
