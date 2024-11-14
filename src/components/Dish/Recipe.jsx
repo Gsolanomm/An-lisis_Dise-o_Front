@@ -77,10 +77,41 @@ function Recipe() {
         var data = { instructions, ingredients: JSON.stringify(ingredients) };
         if (idRecipe == -1) {
             data.idDish = idDish;
-            api.post(`/recipes`, data, { withCredentials: true });
+            api.post(`/recipes`, data, { withCredentials: true })
+            .then((response) => {
+
+                loadRecipe();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Exitoso',
+                    text: response.data.message,
+                });
+            })
         } else {
-            api.put(`/recipes/${idRecipe}`, data, { withCredentials: true });
+            api.put(`/recipes/${idRecipe}`, data, { withCredentials: true })
+            .then((response) => {
+                loadRecipe();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Exitoso',
+                    text: response.data.message,
+                });
+            })
         }
+    }
+
+    const handleSubmitDelete = () => {
+        api.delete(`/recipes/${idRecipe}`, { withCredentials: true })
+        .then((response) => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+            Swal.fire({
+                icon: 'success',
+                title: 'Exitoso',
+                text: response.data.message,
+            });
+        })
     }
 
     return (
@@ -121,7 +152,10 @@ function Recipe() {
                 </table>
 
                 <button className="btn btn_primary mt-4" style={{ backgroundColor: '#34C759', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', whiteSpace: 'nowrap' }} onClick={handleSubmit}>Guardar</button>
-                <button className="btn btn_primary mt-4 ml-2" style={{ backgroundColor: '#C83F46', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', whiteSpace: 'nowrap' }}>Eliminar</button>
+                
+                {idRecipe > 0 && (
+                    <button className="btn btn_primary mt-4 ml-2" style={{ backgroundColor: '#C83F46', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', whiteSpace: 'nowrap' }} onClick={handleSubmitDelete}>Eliminar</button>
+                )}
             </div>
 
             {showIngredientModal && (
