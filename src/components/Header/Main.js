@@ -155,11 +155,12 @@ function Main() {
               {isAuthenticated && isUserDropdownOpen && (
                 <div className="user-dropdown">
                   <ul>
-                  <li><Link to="/perfil"><i className="fa fa-user"></i></Link></li>
-                  <li><Link to="/administrar_usuarios"><i className="fa fa-screwdriver-wrench"></i></Link></li>
-                  <li><Link to="/login" onClick={handleLogout}><i className="fa fa-sign-out-alt"></i></Link></li>
+                    <li><Link to="/perfil"><i className="fa fa-user"></i></Link></li>
+                    {isAdmin && (
+                      <li><Link to="/administrar_usuarios"><i className="fa fa-screwdriver-wrench"></i></Link></li>
+                    )}
+                    <li><Link to="/login" onClick={handleLogout}><i className="fa fa-sign-out-alt"></i></Link></li>
                   </ul>
-               
                 </div>
               )}
             </div>
