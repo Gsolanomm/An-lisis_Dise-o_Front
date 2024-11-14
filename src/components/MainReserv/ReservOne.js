@@ -34,23 +34,49 @@ function ReservOne() {
   const generateAvailableTimes = () => {
     const times = [];
     for (let i = 8; i < 22; i++) {
-      const amHour = i < 12 ? `${i}:00 AM` : `${i - 12}:00 PM`;
-      times.push(amHour);
+      let formattedTime;
+      if (i === 12) {
+        formattedTime = `12:00 PM`;
+      } else if (i < 12) {
+        formattedTime = `${i}:00 AM`;
+      } else {
+        formattedTime = `${i - 12}:00 PM`;
+      }
+      times.push(formattedTime);
     }
     times.push('10:00 PM');
     setAvailableTimes(times);
   };
 
+
+
   const fetchReservations = async () => {
     try {
       const response = await api.get(`/reservation/list/${userId}`);
-     // console.log(response.data);  // Log the response to check the data
       setReservations(response.data.reservations);
     } catch (error) {
       console.error('Error fetching reservations:', error);
     }
   };
-  
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    const newDate = new Date(year, month, day + 1);
+
+    if (newDate.getDate() === 1) {
+      return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
+    } else {
+      return `${newDate.getDate()}/${month + 1}/${year}`;
+    }
+  };
+
+
+
+
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -98,6 +124,29 @@ function ReservOne() {
       time: time || availableTimes[0],
     };
 
+    const conflictingReservation = reservations.find((reservation) => {
+
+      const formattedReservationDate = new Date(reservation.reservationDate).toISOString().split('T')[0];
+      console.log('Fecha de la reserva existente:', formattedReservationDate);
+      const formattedReservationTime = reservation.reservationTime;
+      console.log('Hora de la reserva existente:', formattedReservationTime);
+      const formattedSelectedDate = reservationDate.split('T')[0];
+      console.log('Fecha seleccionada:', formattedSelectedDate);
+      const formattedSelectedTime = time || availableTimes[0];
+      console.log('Hora seleccionada:', formattedSelectedTime);
+  
+      return formattedReservationDate === formattedSelectedDate && formattedReservationTime === formattedSelectedTime;
+    });
+  
+    if (conflictingReservation) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `Ya existe una reserva para esa fecha y hora. Por favor, selecciona otra hora.`,
+      });
+      return;
+    }
+  
     try {
       await api.post('/reservation/add', reservationData);
       Swal.fire({
@@ -105,7 +154,9 @@ function ReservOne() {
         title: '¡Reservación creada!',
         text: 'La reservación ha sido creada exitosamente.',
       });
-      resetForm();
+  
+      fetchReservations(); 
+      resetForm(); 
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -114,6 +165,10 @@ function ReservOne() {
       });
     }
   };
+  
+
+
+
 
   const resetForm = () => {
     setNamePerson('');
@@ -271,8 +326,8 @@ function ReservOne() {
 
                 {userRole === 'administrador' && (
                   <>
-                    <button type="button" onClick={handleAdminReservation} className="btn btn_admin">
-                      Cliente
+                    <button type="button" onClick={handleAdminReservation} className="btnn btn_admin">
+                      Cliente adjudicador de la reservacion
                     </button>
                     <Modal
                       isOpen={isModalOpen}
@@ -325,7 +380,7 @@ function ReservOne() {
               </div>
               <div className="col-md-12">
                 <button type="submit" className="btn btn_primary w-100">
-                  Reservar mesa/espacio
+                  Reservar
                 </button>
               </div>
             </form>
@@ -341,7 +396,7 @@ function ReservOne() {
                 <h3>Ubicación</h3>
                 <p>
                   Guacimo <br />
-                  Guacimo
+                  Del hosiptal de Guacimo 500 metros en direccion al cementerio.
                 </p>
               </li>
               <li>
@@ -362,7 +417,7 @@ function ReservOne() {
           </div>
         </div>
         {userRole === 'cliente' && (
-          
+
           <div className="reservation-table">
             <h3>MIS RESERVACIONES</h3>
             <table className="table table-striped">
@@ -382,7 +437,7 @@ function ReservOne() {
                     <tr key={reservations.idReservation}>
                       <td>{reservation.namePerson}</td>
                       <td>{reservation.phoneNumber}</td>
-                      <td>{new Date(reservation.reservationDate).toLocaleDateString()}</td>
+                      <td>{formatDate(reservation.reservationDate)}</td>
                       <td>{reservation.reservationTime}</td>
                       <td>{reservation.numPeople}</td>
                       <td>{reservation.comment}</td>

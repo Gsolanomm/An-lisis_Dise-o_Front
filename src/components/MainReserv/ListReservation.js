@@ -47,11 +47,17 @@ function ReservOne() {
     setEditingReservation(reservation);
     setNamePerson(reservation.namePerson);
     setPhoneNumber(reservation.phoneNumber);
-    setReservationDate(reservation.reservationDate);
+    
+    const formattedDate = reservation.reservationDate ? new Date(reservation.reservationDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    setReservationDate(formattedDate);
     setNumPeople(reservation.numPeople);
     setComment(reservation.comment);
     setTime(reservation.reservationTime);
+    window.scrollTo(0, 1100);
   };
+  
+  
+  
 
   const handleSave = async () => {
     try {
@@ -65,7 +71,8 @@ function ReservOne() {
       });
       Swal.fire('¡Actualizado!', 'La reservación ha sido actualizada.', 'success');
       setEditingReservation(null);
-      fetchReservations(currentPage); // Actualiza la lista de reservaciones
+      fetchReservations(currentPage); 
+      window.scrollTo(0, document.querySelector('table').offsetTop); 
     } catch (error) {
       console.error('Error al actualizar la reservación:', error);
       Swal.fire({
@@ -75,6 +82,7 @@ function ReservOne() {
       });
     }
   };
+  
 
   const handleDelete = async (idReservation) => {
     const result = await Swal.fire({
@@ -142,9 +150,25 @@ function ReservOne() {
     }
   };
 
-  const formatDate = (date) => {
-    const newDate = new Date(date);
-    return newDate.toLocaleDateString();
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    const newDate = new Date(year, month, day + 1);
+
+    if (newDate.getDate() === 1) {
+      return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
+    } else {
+      return `${newDate.getDate()}/${month + 1}/${year}`;
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return isAuthenticated && (userRole === 'administrador') ? (
@@ -197,46 +221,64 @@ function ReservOne() {
                 ))
               )}
             </tbody>
+            {/* Paginación */}
+            <div className="pagination">
+              <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                Anterior
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={currentPage === i + 1 ? 'active' : ''}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                Siguiente
+              </button>
+            </div>
           </table>
 
-          
+
         </div>
         {editingReservation && (
-            <div className="edit-form">
-              <h3>Editar Reservación</h3>
-              <form>
-                <div className="form-group">
-                  <label>Nombre</label>
-                  <input type="text" value={namePerson} onChange={(e) => setNamePerson(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Teléfono</label>
-                  <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Fecha</label>
-                  <input type="date" value={reservationDate} min={minDate} onChange={(e) => setReservationDate(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Hora</label>
-                  <select value={time} onChange={(e) => setTime(e.target.value)}>
-                    {availableTimes.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Número de personas</label>
-                  <input type="number" value={numPeople} onChange={(e) => setNumPeople(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Comentario</label>
-                  <textarea value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
-                </div>
-                <button type="button" className="btn btn-success" onClick={handleSave}>Guardar</button>
-              </form>
-            </div>
-          )}
+          <div className="edit-form">
+            <h3>Editar Reservación</h3>
+            <form>
+              <div className="form-group">
+                <label>Nombre</label>
+                <input type="text" value={namePerson} onChange={(e) => setNamePerson(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>Teléfono</label>
+                <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>Fecha</label>
+                <input type="date" value={reservationDate} min={minDate} onChange={(e) => setReservationDate(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>Hora</label>
+                <select value={time} onChange={(e) => setTime(e.target.value)}>
+                  {availableTimes.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Número de personas</label>
+                <input type="number" value={numPeople} onChange={(e) => setNumPeople(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>Comentario</label>
+                <textarea value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
+              </div>
+              <button type="button" className="btn btn-success" onClick={handleSave}>Guardar</button>
+            </form>
+          </div>
+        )}
       </div>
     </section>
   ) : (

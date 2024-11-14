@@ -31,41 +31,81 @@
   align-items: center;
 }
 
+
+
+
+
+
+
+
+
 .edit-form {
   margin-top: 20px;
   padding: 15px;
-  background-color: #f9f9f9;
+  background-color: #000000;
   border: 1px solid #ddd;
   border-radius: 5px;
-  max-width: 400px;
+  max-width: 500px; /* Ajuste para un tamaño de formulario más adecuado */
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .edit-form h3 {
   margin-bottom: 15px;
+  text-align: center; /* Centrado del título */
+  color: white;
 }
 
 .edit-form .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Aumento del margen para un mejor espaciado */
 }
 
 .edit-form label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
+  color: white;
 }
 
 .edit-form input,
 .edit-form select,
 .edit-form textarea {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  margin-bottom: 15px; /* Aumento del margen entre campos */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.edit-form input[type="date"],
+.edit-form select,
+.edit-form textarea {
+  background-color: #f4f4f4;
+}
+
+.edit-form textarea {
+  height: 100px;
 }
 
 .edit-form .btn {
-  margin-top: 10px;
-  width: 100%;
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-form .btn:hover {
+  background-color: #218838;
+}
+
+.edit-form .btn:disabled {
+  background-color: #c6c6c6;
+  cursor: not-allowed;
 }
