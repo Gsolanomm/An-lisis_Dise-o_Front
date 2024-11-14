@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import api from '../Auth/AxiosConfig';
+import React, { useEffect, useState } from 'react';
+import Header from '../Header/Main';
+import Footer from '../Footer/Main';
+import Aos from 'aos';
 import Swal from 'sweetalert2';
+import api from '../Auth/AxiosConfig';
+import '../../assets/css/editProfile.css';
 
-const PeopleTable = () => {
+function PeopleTable() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(2); // Cantidad de usuarios por página
-  const [currentUserId, setCurrentUserId] = useState(null); // ID del usuario en sesión
+  const [limit] = useState(5); // Cantidad de usuarios por página
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
+    Aos.init();
     fetchUsers(currentPage);
-    fetchCurrentUser(); // Obtener el ID del usuario autenticado
+    fetchCurrentUser();
   }, [currentPage]);
 
   const fetchUsers = async (page) => {
@@ -43,7 +48,6 @@ const PeopleTable = () => {
       Swal.fire('Advertencia', 'No puedes eliminar tu propio usuario.', 'warning');
       return;
     }
-
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción inhabilitará al usuario.',
@@ -73,76 +77,77 @@ const PeopleTable = () => {
   };
 
   return (
-    <div className="container-fluid">
-      {users.length === 0 ? (
-        <p className="text-center">No hay usuarios disponibles</p>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-borderless text-white mt-3" style={{width:'1300px',marginLeft:'%'}}>
-            <thead className="table-danger text-center">
-              <tr>
-                <th>Número</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo Electrónico</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Rol</th>
-                <th>Activo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={user.idUser} className="text-center align-middle text-white">
-                  <td>{index + 1 + (currentPage - 1) * limit}</td>
-                  <td>{user.firstName}</td>
-                  <td>{user.lastName}</td>
-                  <td>{user.email}</td>
-                  <td>{new Date(user.dateOfBirth).toLocaleDateString()}</td>
-                  <td>{user.role}</td>
-                  <td>{user.isActive ? 'Activo' : 'Inactivo'}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary btn-sm me-1"
-                      onClick={() => Swal.fire('Acción', 'Aquí puedes actualizar el usuario', 'info')}
-                    >
-                      Actualizar
-                    </button>
-                    
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDisableUser(user.idUser)}
-                      disabled={!user.isActive} // Deshabilita el botón si el usuario ya está inactivo
-                    >
-                      Eliminar
-                    </button>
-                  </td>
+    <div className="page_wrapper">
+      <Header />
+      <div className="container my-5" style={{ padding: '4%' }}>
+        <h2 className="text-center mb-4">Lista de Usuarios</h2>
+        {users.length === 0 ? (
+          <p className="text-center">No hay usuarios disponibles</p>
+        ) : (
+          <div className="table-responsive" style={{ maxHeight: '90%', overflowX: 'auto' }}>
+            <table className="table table-hover table-striped text-white">
+              <thead className="table-danger text-center">
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Correo Electrónico</th>
+                  <th>Fecha de Nacimiento</th>
+                  <th>Rol</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="table-dark">
+                {users.map((user, index) => (
+                  <tr key={user.idUser} className="text-center align-middle">
+                    <td>{index + 1 + (currentPage - 1) * limit}</td>
+                    <td>{user.firstName}</td>
+                    <td>{user.lastName}</td>
+                    <td>{user.email}</td>
+                    <td>{new Date(user.dateOfBirth).toLocaleDateString()}</td>
+                    <td>{user.role}</td>
+                    <td>
+                      <button
+                        className="btn btn-primary btn-sm me-1"
+                        onClick={() => Swal.fire('Acción', 'Aquí puedes actualizar el usuario', 'info')}
+                      >
+                        Actualizar
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDisableUser(user.idUser)}
+                        disabled={!user.isActive}
+                      >
+                        Inhabilitar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-secondary"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button
+            className="btn btn-secondary"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
         </div>
-      )}
-
-      <div className="d-flex justify-content-between align-items-center mt-3">
-        <button
-          className="btn btn-secondary"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Anterior
-        </button>
-        <span>Página {currentPage} de {totalPages}</span>
-        <button
-          className="btn btn-secondary"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Siguiente
-        </button>
       </div>
+      <Footer />
     </div>
   );
-};
+}
 
 export default PeopleTable;

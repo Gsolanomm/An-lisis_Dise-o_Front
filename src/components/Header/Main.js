@@ -33,7 +33,7 @@ function Main() {
       const response = await api.get('/auth/verify-role', {
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
-      setIsAdmin(response.data.role === 'administrador'); // Comprueba si el rol es "administrador"
+      setIsAdmin(response.data.role === 'administrador');
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'Error al verificar el rol del usuario.', 'error');
@@ -63,7 +63,7 @@ function Main() {
     localStorage.removeItem('accessToken');
     setIsAuthenticated(false);
     setProfileImage(null);
-    setIsAdmin(false); // Restablece el estado de administrador al cerrar sesión
+    setIsAdmin(false);
     navigate('/login');
   };
 
@@ -98,42 +98,40 @@ function Main() {
             </button>
             <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto">
-                <li className="nav-item has_dropdown">
                 <li className="nav-item">
                   <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> 
                 </li>
-   
-                </li>
-
                 <li className="nav-item">
                   <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
                 </li>
-
-
-
-
-                <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
-                {isAuthenticated && isAdmin && (
-                <li className="nav-item has_dropdown">
-                  <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
-                 
-                </li>
-   )}
-
-                <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
                 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
-                  </li>
-                )}
-                {isAuthenticated && isAdmin && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
+                    <Link className="nav-link" to="/OrderMenu">Comandas</Link>
                   </li>
                 )}
                 
+                <li className="nav-item">
+                      <Link className="nav-link" to="/listar_rifa" onClick={handleMenuItemClick}>Listar Rifas</Link>
+                    </li>
+                {isAuthenticated && isAdmin && (
+                  <>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
+                    </li>
+                    {/* New Links for Raffle Management */}
+                    
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/crear_rifa" onClick={handleMenuItemClick}>Crear Rifa</Link>
+                    </li>
+                  </>
+                )}
                 <li className="nav-item contact_number">
-                  <Link className="nav-link" to="tel:+18001234578"><span>Book a table :</span> +1 800 123 45 78</Link>
+                  <Link className="nav-link" to="tel:+18001234578">
+                    <span>Book a table :</span> +1 800 123 45 78
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -146,13 +144,14 @@ function Main() {
               {isAuthenticated && isUserDropdownOpen && (
                 <div className="user-dropdown">
                   <ul>
-                    <li><Link to="/perfil">Perfil</Link></li>
-                    <li><Link to="/login" onClick={handleLogout}>Cerrar sesión</Link></li>
+                  <li><Link to="/perfil"><i className="fa fa-user"></i></Link></li>
+                  <li><Link to="/administrar_usuarios"><i className="fa fa-screwdriver-wrench"></i></Link></li>
+                  <li><Link to="/login" onClick={handleLogout}><i className="fa fa-sign-out-alt"></i></Link></li>
                   </ul>
+               
                 </div>
               )}
             </div>
-          
           </nav>
         </div>
       </header>
