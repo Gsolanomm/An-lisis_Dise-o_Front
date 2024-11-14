@@ -9,7 +9,6 @@ import MenuList3 from '../components/MenuList3/Main'
 import ConfigurationMenu from '../components/ConfigurationMenu/Main'
 import About from '../components/About/Main'
 import Reserv1 from '../components/Reserv1/Main'
-import Resrv2 from '../components/Resrv2/Main'
 import Reviews from '../components/Reviews/Main'
 import OurChef from '../components/OurChef/Main'
 import Contact from '../components/Contact/Main'
@@ -26,6 +25,7 @@ import Raffle from '../components/Raffle/Main';
 import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
 import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
+import ListReser from '../components/MainReserv/ListReservation';
 
 function Index() {
     
@@ -41,7 +41,7 @@ function Index() {
           <Route path="/configurationmenu" element={<ConfigurationMenu />} />
           <Route path="/about" element={<About />} />
           <Route path="/reservation1" element={<Reserv1 />} />
-          <Route path="/reservation2" element={<Resrv2 />} />
+        <Route path="/listreservation" element={<ListReser />} />
           <Route path="/review" element={<Reviews />} />
           <Route path="/ourchef" element={<OurChef />} />
           <Route path="/contact" element={<Contact/>}/>
@@ -78,7 +78,14 @@ function Index() {
             <PeopleTable />
           </ProtectedRoute>} />
             
-            
+          <Route path='/reservation1' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <Reserv1 />
+          </ProtectedRoute>} />
+
+          <Route path='/listreservation' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <ListReser />
+          </ProtectedRoute>} />
+
 
 
 
