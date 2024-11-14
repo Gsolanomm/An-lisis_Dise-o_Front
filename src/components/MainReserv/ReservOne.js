@@ -27,6 +27,7 @@ function ReservOne() {
   const [newClientName, setNewClientName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [reservations, setReservations] = useState([]);
 
   const navigate = useNavigate();
 
@@ -40,16 +41,34 @@ function ReservOne() {
     setAvailableTimes(times);
   };
 
+  const fetchReservations = async () => {
+    try {
+      const response = await api.get(`/reservation/list/${userId}`);
+     // console.log(response.data);  // Log the response to check the data
+      setReservations(response.data.reservations);
+    } catch (error) {
+      console.error('Error fetching reservations:', error);
+    }
+  };
+  
+
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setIsAuthenticated(!!token);
 
-    if (token) fetchUserRole();
+    if (token) {
+      fetchUserRole().then(() => {
+        if (userId) {
+          fetchReservations();
+        }
+      });
+    }
 
     const today = new Date();
     setMinDate(today.toISOString().split('T')[0]);
     generateAvailableTimes();
-  }, []);
+  }, [userId]);
+
 
   const fetchUserRole = async () => {
     try {
@@ -184,6 +203,7 @@ function ReservOne() {
                       placeholder="Tu Nombre"
                       value={namePerson}
                       onChange={(e) => setNamePerson(e.target.value)}
+                      required={!selectedClient}
                     />
                   </div>
                 </div>
@@ -195,6 +215,7 @@ function ReservOne() {
                       placeholder="Número de Teléfono"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
@@ -206,6 +227,7 @@ function ReservOne() {
                       placeholder="Número de Personas"
                       value={numPeople}
                       onChange={(e) => setNumPeople(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
@@ -281,7 +303,6 @@ function ReservOne() {
                         )}
                       </div>
 
-                      {/* Paginación */}
                       <div className="modal-pagination">
                         <button onClick={handlePrevPage} disabled={currentPage === 1}>
                           Anterior
@@ -340,6 +361,46 @@ function ReservOne() {
             </ul>
           </div>
         </div>
+        {userRole === 'cliente' && (
+          
+          <div className="reservation-table">
+            <h3>MIS RESERVACIONES</h3>
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Teléfono</th>
+                  <th>Fecha de Reserva</th>
+                  <th>Hora de Reserva</th>
+                  <th>Número de Personas</th>
+                  <th>Comentarios</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservations && reservations.length > 0 ? (
+                  reservations.map((reservation) => (
+                    <tr key={reservations.idReservation}>
+                      <td>{reservation.namePerson}</td>
+                      <td>{reservation.phoneNumber}</td>
+                      <td>{new Date(reservation.reservationDate).toLocaleDateString()}</td>
+                      <td>{reservation.reservationTime}</td>
+                      <td>{reservation.numPeople}</td>
+                      <td>{reservation.comment}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center">
+                      No hay reservas disponibles.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+
       </div>
     </section>
   );

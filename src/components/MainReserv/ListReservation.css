@@ -1,32 +1,71 @@
-/* Fondo negro para toda la tabla */
 .table {
-    background-color: black !important;
-    color: white !important;
-    border-collapse: collapse; /* Colapsa bordes */
-  }
-  
-  /* Fondo negro para los encabezados de la tabla */
-  .table th {
-    background-color: black !important;
-    color: white !important;
-    border: 1px solid white !important; /* Bordes negros */
-  }
-  
-  /* Fondo negro y bordes negros para las celdas */
-  .table td {
-    background-color: black !important;
-    color: white !important;
-    border: 1px solid white !important; /* Bordes negros */
-  }
-  
-  /* Quita cualquier sombreado o efecto de hover */
-  .table tr:hover {
-    background-color: black !important;
-  }
-  
-  /* Elimina cualquier estilo adicional de otros frameworks como Bootstrap */
-  .table th, .table td {
-    padding: 8px; /* Opcional: Ajusta el espacio dentro de cada celda */
-    text-align: center;
-  }
-  
+  background-color: black !important;
+  color: white !important;
+  border-collapse: collapse;
+}
+
+.table th {
+  background-color: black !important;
+  color: white !important;
+  border: 1px solid white !important;
+}
+
+.table td {
+  background-color: black !important;
+  color: white !important;
+  border: 1px solid white !important;
+}
+
+.table tr:hover {
+  background-color: black !important;
+}
+
+.table th, .table td {
+  padding: 8px;
+  text-align: center;
+}
+
+.reservation-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-form {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.edit-form h3 {
+  margin-bottom: 15px;
+}
+
+.edit-form .form-group {
+  margin-bottom: 10px;
+}
+
+.edit-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.edit-form input,
+.edit-form select,
+.edit-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.edit-form .btn {
+  margin-top: 10px;
+  width: 100%;
+}

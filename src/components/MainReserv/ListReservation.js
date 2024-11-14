@@ -15,6 +15,7 @@ function ReservOne() {
   const [numPeople, setNumPeople] = useState('');
   const [comment, setComment] = useState('');
   const [time, setTime] = useState('');
+  const [editingReservation, setEditingReservation] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [userId, setUserId] = useState(null);
@@ -26,7 +27,7 @@ function ReservOne() {
   const fetchReservations = async (page = 1) => {
     try {
       const response = await api.get('/reservation/list', {
-        params: { page, limit: 10 }, // Paginación con parámetros
+        params: { page, limit: 10 },
       });
       setReservations(response.data.reservations);
       setTotalPages(response.data.totalPages);
@@ -38,6 +39,39 @@ function ReservOne() {
         icon: 'error',
         title: 'Error al cargar las reservaciones',
         text: 'Hubo un problema al cargar la lista de reservaciones. Por favor, intenta nuevamente.',
+      });
+    }
+  };
+
+  const handleEditClick = (reservation) => {
+    setEditingReservation(reservation);
+    setNamePerson(reservation.namePerson);
+    setPhoneNumber(reservation.phoneNumber);
+    setReservationDate(reservation.reservationDate);
+    setNumPeople(reservation.numPeople);
+    setComment(reservation.comment);
+    setTime(reservation.reservationTime);
+  };
+
+  const handleSave = async () => {
+    try {
+      await api.put(`/reservation/update/${editingReservation.idReservation}`, {
+        namePerson,
+        phoneNumber,
+        reservationDate,
+        numPeople,
+        comment,
+        time,
+      });
+      Swal.fire('¡Actualizado!', 'La reservación ha sido actualizada.', 'success');
+      setEditingReservation(null);
+      fetchReservations(currentPage); // Actualiza la lista de reservaciones
+    } catch (error) {
+      console.error('Error al actualizar la reservación:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la reservación. Intenta nuevamente.',
       });
     }
   };
@@ -81,8 +115,8 @@ function ReservOne() {
     setMinDate(`${year}-${month}-${day}`);
     generateAvailableTimes();
 
-    fetchReservations(currentPage); // Llamada inicial con la página actual
-  }, [currentPage]); // La paginación depende del estado `currentPage`
+    fetchReservations(currentPage);
+  }, [currentPage]);
 
   const generateAvailableTimes = () => {
     const times = [];
@@ -110,21 +144,19 @@ function ReservOne() {
 
   const formatDate = (date) => {
     const newDate = new Date(date);
-    return newDate.toLocaleDateString(); // Formateo de fecha para que sea más legible
+    return newDate.toLocaleDateString();
   };
 
-  // Dentro de la función ReservOne:
   return isAuthenticated && (userRole === 'administrador') ? (
     <section className="bredcrumb_section resarvation_form reservationpage_1_bg">
-      <div className="side_shape position-absolute" />
       <div className="container">
-        <div className="section_title text-center" data-aos="fade-up" data-aos-duration={1500}>
+        <div className="section_title text-center">
           <span className="icon">
             <img src={Img02} alt="img" />
           </span>
           <span className="sub_text">Lista de reservaciones</span>
         </div>
-        <div className="form_inner" data-aos="fade-in" data-aos-duration={1500} data-aos-delay={150}>
+        <div className="form_inner">
           <table className="table">
             <thead>
               <tr>
@@ -154,10 +186,10 @@ function ReservOne() {
                     <td>{reservation.numPeople}</td>
                     <td>{reservation.comment}</td>
                     <td>
-                      <button className="btn btn-primary">Editar</button>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDelete(reservation.idReservation)} >
+                      <button className="btn btn-primary" onClick={() => handleEditClick(reservation)}>
+                        Editar
+                      </button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(reservation.idReservation)}>
                         Eliminar
                       </button>
                     </td>
@@ -165,26 +197,50 @@ function ReservOne() {
                 ))
               )}
             </tbody>
-            <div className="pagination text-center">
-              <button
-                disabled={currentPage === 1 || totalReservations === 0}
-                onClick={() => setCurrentPage(currentPage - 1)}>
-                Anterior
-              </button>
-              <span>Página {currentPage} de {totalReservations === 0 ? 1 : totalPages}</span>
-              <button
-                disabled={currentPage === totalPages || totalReservations === 0}
-                onClick={() => setCurrentPage(currentPage + 1)}>
-                Siguiente
-              </button>
-            </div>
           </table>
 
+          
         </div>
+        {editingReservation && (
+            <div className="edit-form">
+              <h3>Editar Reservación</h3>
+              <form>
+                <div className="form-group">
+                  <label>Nombre</label>
+                  <input type="text" value={namePerson} onChange={(e) => setNamePerson(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Teléfono</label>
+                  <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Fecha</label>
+                  <input type="date" value={reservationDate} min={minDate} onChange={(e) => setReservationDate(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Hora</label>
+                  <select value={time} onChange={(e) => setTime(e.target.value)}>
+                    {availableTimes.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Número de personas</label>
+                  <input type="number" value={numPeople} onChange={(e) => setNumPeople(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Comentario</label>
+                  <textarea value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
+                </div>
+                <button type="button" className="btn btn-success" onClick={handleSave}>Guardar</button>
+              </form>
+            </div>
+          )}
       </div>
     </section>
   ) : (
-    <div>Acceso denegado. Debes ser cliente o administrador para ver las reservaciones.</div>
+    <div>No tienes permisos para ver esta página.</div>
   );
 }
 

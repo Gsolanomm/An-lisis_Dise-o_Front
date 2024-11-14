@@ -59,7 +59,7 @@
 .modal-content input:focus,
 .modal-content select:focus,
 .modal-content textarea:focus {
-  border-color: #4a4342;
+  border-color: #1f5a62;
   outline: none;
 }
 
@@ -86,7 +86,7 @@
 .client-list-container button {
   width: 100%;
   padding: 10px;
-  background-color: #4a4342;
+  background-color: #1f5a62;
   color: white;
   border: none;
   border-radius: 5px;
@@ -108,7 +108,7 @@
 }
 
 .modal-pagination button {
-  background-color: #4a4342;
+  background-color: #1f5a62;
   color: white;
   border: none;
   border-radius: 5px;
@@ -141,7 +141,7 @@
 
 /* Estilo personalizado para el botón */
 .btn_admin {
-  background-color: #4a4342; /* Azul-coral */
+  background-color: #1f5a62; /* Azul-coral */
   color: white; /* Texto blanco */
   padding: 10px 20px; /* Espaciado interno */
   border: none; /* Sin borde */
@@ -157,3 +157,11 @@
 .btn_admin:hover {
   background-color: #D32F2F; /* Cambio de color cuando se pasa el cursor */
 }
+
+/* Centrar el h3 y agregar espacio en la parte superior e inferior */
+.reservation-table h3 {
+  text-align: center; /* Centra el texto */
+  margin-top: 40px; /* Espacio arriba */
+  margin-bottom: 20px; /* Espacio abajo */
+}
+
