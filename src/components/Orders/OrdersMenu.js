@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import api from '../Auth/AxiosConfig';
-import OrderModal from './OrderModal'; // Asegúrate de importar el modal
+import OrderModal from './OrderModal'; 
+import { useNavigate } from 'react-router-dom';
+
 
 function OrdersMenu() {
-    const [salonFilter, setSalonFilter] = useState("Todos");
+    const navigate = useNavigate();
     const [tables, setTables] = useState([]);
-    const [showModal, setShowModal] = useState(false);  // Para controlar la visibilidad del modal
-    const [selectedTable, setSelectedTable] = useState(null);  // Para almacenar los datos de la mesa seleccionada
-    const [selectedTableName, setSelectedTableName] = useState(""); // Para almacenar el nombre de la mesa seleccionada
+    const [showModal, setShowModal] = useState(false); 
+    const [selectedTable, setSelectedTable] = useState(null);  
+    const [selectedTableName, setSelectedTableName] = useState(""); 
 
-    // Cargar mesas desde el backend
     const loadTables = async () => {
         try {
             const response = await api.get('/tables');
@@ -62,16 +63,51 @@ function OrdersMenu() {
         });
     };
 
+    const handleViewOrders = () => {
+        navigate('/see_orders');
+      };
+
     const handleTableClick = (table, index) => {
-        const tableName = `Mesa ${index + 1}`;  // Generar el nombre de la mesa
-        setSelectedTable(table);  // Almacena la mesa seleccionada
-        setSelectedTableName(tableName);  // Almacena el nombre de la mesa
-        setShowModal(true);  // Muestra el modal
+        const tableName = `Mesa ${table.number}`;  // Usar el número de mesa
+        setSelectedTable(table);  
+        setSelectedTableName(tableName);  
+        setShowModal(true);  
     };
 
-    const handleEditSector = (sectorName) => {
-        const currentNumMesas = tables.filter(table => table.sector === sectorName).length;
+    const handleTableStatusChange = async (tableId) => {
+        try {
+            // Realizar la actualización del estado de la mesa en la base de datos
+            await api.put(`/tables/${tableId}`, { available: false }); // Cambiar el estado a "ocupada"
+            
+            // Actualizar el estado local para reflejar el cambio
+            setTables((prevTables) => prevTables.map(table => 
+                table.tableId === tableId ? { ...table, available: false } : table
+            ));
+        } catch (error) {
+            console.error("Error al actualizar el estado de la mesa:", error);
+        }
+    };
+    
 
+    const handleEditSector = (sectorName) => {
+        // Verificar si alguna mesa en el sector está ocupada
+        const sectorTables = tables.filter(table => table.sector === sectorName);
+        const hasOccupiedTable = sectorTables.some(table => !table.available); // Verifica si alguna mesa está ocupada
+        
+        if (hasOccupiedTable) {
+            // Si hay alguna mesa ocupada, mostrar un error
+            Swal.fire({
+                title: 'Error',
+                text: 'No se puede editar el sector porque hay mesas ocupadas.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#d33'
+            });
+            return; // No permitir continuar con la edición
+        }
+    
+        const currentNumMesas = sectorTables.length;
+    
         Swal.fire({
             title: `Editar Salón: ${sectorName}`,
             html:
@@ -84,23 +120,23 @@ function OrdersMenu() {
             confirmButtonText: 'Guardar cambios',
             preConfirm: () => {
                 const newSector = document.getElementById('newSector').value;
-                const newNumMesas = document.getElementById('newNumMesas').value;
-
-                if (!newSector || !newNumMesas) {
+                const newNumMesas = parseInt(document.getElementById('newNumMesas').value, 10);
+    
+                if (!newSector || isNaN(newNumMesas)) {
                     Swal.showValidationMessage('Por favor, ingrese todos los datos');
                     return false;
                 }
-
+    
                 return { newSector, newNumMesas };
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const { newSector, newNumMesas } = result.value;
-
+    
                 try {
-                    await api.put(`/tables/edit/${sectorName}`, { newSector, newNumMesas });
+                    await api.put(`/tables/${sectorName}`, { newSector, newNumMesas });
                     Swal.fire('¡Éxito!', `El sector ${sectorName} fue actualizado a ${newSector} con ${newNumMesas} mesas`, 'success');
-                    loadTables();
+                    loadTables(); // Recargar las mesas después de la actualización
                 } catch (error) {
                     Swal.fire('Error', 'Hubo un problema al actualizar el sector', 'error');
                     console.error("Error al actualizar sector:", error);
@@ -108,9 +144,11 @@ function OrdersMenu() {
             }
         });
     };
+    
+    
 
-    // Agrupar mesas por sector
-    const tablesBySector = tables.reduce((acc, table) => {
+    // Agrupar mesas por sector y solo mostrar las activas
+    const tablesBySector = tables.filter(table => table.isActived).reduce((acc, table) => {
         const sector = acc[table.sector] || [];
         sector.push(table);
         acc[table.sector] = sector;
@@ -118,20 +156,36 @@ function OrdersMenu() {
     }, {});
 
     return (
-        <div className="container flex-grow-1 text-white p-3" style={{ width: '100%', marginTop: '10%', marginBottom: '5%', backgroundColor:'#1F1F1F' }}>
-            <div className="d-flex justify-content-end mb-4">
-                <button
-                    className="btn btn_primary"
-                    style={{
-                        backgroundColor: '#34C759',
-                        color: 'white',
-                        fontWeight: 'bold',
-                    }}
-                    onClick={handleNewSalonClick}
-                >
-                    + Nuevo salón
-                </button>
-            </div>
+        <div className="container flex-grow-1 text-white p-3" style={{ width: '100%', marginTop: '100px', marginBottom: '5%', backgroundColor:'#1F1F1F' }}>
+           <div className="d-flex justify-content-between mb-4">
+    <button
+        className="btn btn_primary"
+        style={{
+            backgroundColor: '#34C759',
+            color: 'white',
+            fontWeight: 'bold',
+        }}
+        onClick={handleViewOrders}
+     // Cambia el handler si es necesario
+    >
+        Ver ordenes
+    </button>
+
+    <button
+        className="btn btn_primary"
+        style={{
+            backgroundColor: '#34C759',
+            color: 'white',
+            fontWeight: 'bold',
+        }}
+        onClick={handleNewSalonClick}
+    >
+        + Nuevo salón
+    </button>
+</div>
+
+
+         
 
             <div>
                 {Object.keys(tablesBySector).map(sector => (
@@ -155,25 +209,26 @@ function OrdersMenu() {
                         </h5>
 
                         <div className="d-flex flex-wrap">
-                            {tablesBySector[sector].map((table, index) => (
-                                <button
-                                    key={table.tableId}
-                                    id={table.tableId}
-                                    className="btn m-2"
-                                    style={{
-                                        backgroundColor: '#34C759',
-                                        color: 'white',
-                                        width: '120px',
-                                        height: '80px',
-                                        fontWeight: 'bold',
-                                        fontSize: '15px',
-                                        whiteSpace: 'normal',
-                                        textAlign: 'center',
-                                    }}
-                                    onClick={() => handleTableClick(table, index)}  // Abre el modal al seleccionar la mesa
-                                >
-                                    MESA {index + 1} <br /> {table.available ? "Disponible" : "Ocupada"}
-                                </button>
+                            {tablesBySector[sector].map((table) => (
+                               <button
+                               key={table.tableId}
+                               id={table.tableId}
+                               className="btn m-2"
+                               style={{
+                                   backgroundColor: table.available ? '#34C759' : '#FF3B30', // Verde si está disponible, rojo si está ocupada
+                                   color: 'white',
+                                   width: '120px',
+                                   height: '80px',
+                                   fontWeight: 'bold',
+                                   fontSize: '15px',
+                                   whiteSpace: 'normal',
+                                   textAlign: 'center',
+                               }}
+                               onClick={() => handleTableClick(table)}  // Abre el modal al seleccionar la mesa
+                           >
+                               MESA {table.number} <br /> {table.available ? "Disponible" : "Ocupada"}
+                           </button>
+                           
                             ))}
                         </div>
                     </div>
@@ -184,9 +239,11 @@ function OrdersMenu() {
             {selectedTable && (
                 <OrderModal
                     show={showModal}
-                    onHide={() => setShowModal(false)}  // Cerrar el modal
-                    tableName={selectedTableName}  // Nombre de la mesa seleccionada
-                    tableId={selectedTable.tableId}  // ID de la mesa seleccionada
+                    onHide={() => setShowModal(false)}  
+                    tableName={selectedTableName}  
+                    tableId={selectedTable.tableId}  
+                    sectorName={selectedTable.sector}  
+                    onTableStatusChange={handleTableStatusChange}
                 />
             )}
         </div>

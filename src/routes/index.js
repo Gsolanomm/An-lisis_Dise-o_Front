@@ -25,6 +25,7 @@ import OrdersMenu from '../components/Orders/Main';
 import Raffle from '../components/Raffle/Main';
 import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
 import PeopleTable from '../components/Profile/PeopleTable';
+import SeeOrders from '../components/Orders/SeeOrders';
 
 function Index() {
     
@@ -57,6 +58,9 @@ function Index() {
                     <OrdersMenu />
                  </ProtectedRoute>} />
 
+<Route path="/see_orders" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
+            <SeeOrders />
+          </ProtectedRoute>} />
 
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
