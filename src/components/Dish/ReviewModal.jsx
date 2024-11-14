@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-
+import Rating from './Rating';
 
 function ReviewModal({ review, onClose, onAddReview }) {
 
-    const [rating, setRating] = useState("");
+    const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [anonimus, setAnonimus] = useState(false);
+    const [idUser, setIdUser] = useState(0);
 
     useEffect(() => {
-        console.log("review modal", review);
-        console.log("review modal2", onClose);
-        console.log("review modal3", onAddReview);
+
         if (review != null) {
-            setRating(review.rating + '');
+            setRating(review.rating);
             setComment(review.comment);
-            setAnonimus(review.anonimus)
+            setAnonimus(review.anonimus);
+            setIdUser(review.idUser);
+ 
         } else {
-            setRating('');
+            setRating(0);
             setComment('');
             setAnonimus(false);
+            setIdUser(0);
         }
     }, []);
 
@@ -28,7 +30,7 @@ function ReviewModal({ review, onClose, onAddReview }) {
 
         var message = '';
 
-        if (rating.trim() === '' || !parseInt(rating)) {
+        if (rating <= 0 || rating > 5) {
             message = 'Es requerido calificar el platillo';
         }
 
@@ -43,7 +45,7 @@ function ReviewModal({ review, onClose, onAddReview }) {
                 text: message,
             });
         } else {
-            onAddReview(review, { rating, comment, anonimus });
+            onAddReview(review, { idUser, rating, comment, anonimus });
             onClose();
         }
     };
@@ -69,23 +71,12 @@ function ReviewModal({ review, onClose, onAddReview }) {
             }}>
 
                 <div className="section_title text-center">
-                    <h2>{review != null ? 'Editar resena' : 'Añadir resena'}</h2>
+                    <h2>{review != null ? 'Editar reseña' : 'Añadir reseña'}</h2>
                 </div>
 
-
-
                 <div className="content-Pane mt-5">
-                    {[1, 2, 3, 4, 5].map((num) => (
-                        <label key={num} className='mx-2'>
-                            <input
-                                type="radio"
-                                value={num}
-                                checked={rating == num}
-                                onChange={(e) => setRating(e.target.value)}
-                            />
-                            {num}
-                        </label>
-                    ))}
+
+                    <Rating rating={rating} setRating={setRating} />
 
                     <div class="mb-3">
                         <label for="" class="form-label">Comentario</label>
@@ -112,3 +103,10 @@ function ReviewModal({ review, onClose, onAddReview }) {
 }
 
 export default ReviewModal;
+
+
+
+/*
+    esto va en el botón de eliminar
+    onClick={() => handleDeleteReview(item)}
+*/
