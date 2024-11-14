@@ -2,12 +2,7 @@ import React, { useEffect } from 'react'
 import Header from '../Header/Main'
 import Footer from '../Footer/Main'
 import Aos from 'aos'
-import EditProfile from '../Profile/EditProfile'  
-import PeopleTable from './PeopleTable'  
-import UpdateProfileImage from './UpdateProfileImage'
-import ProtectedRoute from '../Auth/ProtectedRoute'
-import '../../assets/css/editProfile.css'
-
+import CreateRaffle from './CreateRaffle'
 function Main() {
 
     useEffect(() => {
@@ -18,9 +13,11 @@ function Main() {
     return (
         <div className='page_wrapper'>
             <Header />
-            <div style={{ padding: '10%', borderRadius: '15px' }}>
-                <EditProfile />
+
+            <div style={{ padding: '7%' }}>
+                <CreateRaffle />
             </div>
+
             <Footer />
         </div>
     )

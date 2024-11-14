@@ -22,6 +22,9 @@ import ProtectedRoute from '../components/Auth/ProtectedRoute'
 import Register from '../components/Register/Main'
 import Profile from '../components/Profile/Main'
 import OrdersMenu from '../components/Orders/Main';
+import Raffle from '../components/Raffle/Main';
+import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
+import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
 
 function Index() {
@@ -45,12 +48,15 @@ function Index() {
           <Route path="/bloglist" element={<BlogList />} />
           <Route path="/blogdetail" element={<BlogDetail/>} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/Admin_Categorys" element={<ProtectedRoute allowedRoles={"administrador"} >
-            <Category />
-          </ProtectedRoute>} />
-<Route path="/OrderMenu" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
-            <OrdersMenu />
-          </ProtectedRoute>} />
+          <Route path="/Admin_Categorys" element={
+              <ProtectedRoute allowedRoles={"administrador"} >
+                  <Category />
+              </ProtectedRoute>} />
+
+            <Route path="/OrderMenu" element={
+                <ProtectedRoute allowedRoles={["administrador","empleado"]} >
+                    <OrdersMenu />
+                 </ProtectedRoute>} />
 
 <Route path="/see_orders" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
             <SeeOrders />
@@ -61,6 +67,21 @@ function Index() {
           <Route path='/perfil' element={<ProtectedRoute >
             <Profile />
           </ProtectedRoute>} />
+
+          <Route path='/crear_rifa' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <Raffle />
+          </ProtectedRoute>} />
+
+          <Route path='/listar_rifa' element={ <RaffleListinigPage/> }/>
+
+          <Route path='/administrar_usuarios' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <PeopleTable />
+          </ProtectedRoute>} />
+            
+            
+
+
+
         </Routes>
     </>
   )
