@@ -25,7 +25,7 @@ import Raffle from '../components/Raffle/Main';
 import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
 import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
-import ListReser from '../components/MainReserv/ListReservation';
+import ListReser from '../components/Reserv1/Mainlist';
 
 function Index() {
     

@@ -1,39 +1,4 @@
-.table {
-    background-color: black !important;
-    color: white !important;
-    border-collapse: collapse;
-  }
-  
-  .table th {
-    background-color: black !important;
-    color: white !important;
-    border: 1px solid white !important;
-  }
-  
-  .table td {
-    background-color: black !important;
-    color: white !important;
-    border: 1px solid white !important;
-  }
-  
-  .table tr:hover {
-    background-color: black !important;
-  }
-  
-  .table th, .table td {
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .reservation-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  
-  
-  
+
   
   
   
