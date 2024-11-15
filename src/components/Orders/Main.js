@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import Header from '../Header/Main'
 import Footer from '../Footer/Main'
-import ListReserva from '../MainReserv/ListReservation'
-import Reservaciones from '../MainReserv/ReservOne'
 import Aos from 'aos'
+import OrdersMenu from './OrdersMenu'
 
 
-function MainList() {
+function Main() {
 
     useEffect(() => {
         Aos.init();
@@ -16,10 +15,10 @@ function MainList() {
     return (
         <div className='page_wrapper'>
             <Header />
-            <Reservaciones />
+           <OrdersMenu />
             <Footer />
         </div>
     )
 }
 
-export default MainList
+export default Main
