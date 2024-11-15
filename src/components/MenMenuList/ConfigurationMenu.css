@@ -6,9 +6,10 @@
     max-width: 600px; 
     margin: 100px auto 0;   
     padding: 20px;     
-    background-color: #281919;
+    background-color: #000000;
     border-radius: 8px;    
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .centered-form .form-group {
@@ -45,3 +46,12 @@
 .centered-form .btn:hover {
     background-color: #0056b3; 
 }
+
+.centered-title {
+    text-align: center;
+}
+
+.configuration_menu_section {
+    padding-bottom: 30px;
+}
+  

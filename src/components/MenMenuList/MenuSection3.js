@@ -36,8 +36,6 @@ function MenuSection3() {
           createCategory(cat.idCategory, cat.name, cat.createdAt, cat.updatedAt)
         );
         setCategories(formattedCategories);
-
-        // Si hay al menos una categoría, selecciona la primera y carga sus platillos
         if (formattedCategories.length > 0) {
           setActiveCategoryId(formattedCategories[0].idCategory);
         }
@@ -154,6 +152,11 @@ function MenuSection3() {
                               <h3>{dish.name}</h3>
                               <p>{dish.description}</p>
                               <span className="price">₡{dish.price}</span>
+
+                              <div className="dish_buttons">
+                              <button className="btn btn-edit" style={{ color: '#87ceeb' }} onClick={() => navigate(`/dish/${dish.idDish}/recipe`)}>Receta</button>
+                              <button className="btn btn-edit" style={{ color: '#87ceeb' }} onClick={() => navigate(`/dish/${dish.idDish}/review`)}>Reseñas</button>
+                              </div>
 
                               {isAdmin && (
                                 <div className="dish_actions">

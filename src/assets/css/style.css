@@ -4635,6 +4635,56 @@ iframe#youtubevideo {
 .user-dropdown ul li a:hover {
   color: var(--primary-red);
 }
+.blog_panel {
+  background-color: #2f2f2f;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.main_img img {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.blog_info {
+  padding: 15px;
+  color: #fff;
+}
+
+.blog_info .date {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.blog_info h2 a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.authore_block {
+  display: flex;
+  align-items: center;
+}
+
+.authore_block .authore .img img {
+  width: 40px;
+  height: 40px;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+}
+
 
 /* Responsive adjustments */
 @media screen and (max-width: 992px) {

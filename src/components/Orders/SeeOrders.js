@@ -9,6 +9,7 @@ function SeeOrders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [sectors, setSectors] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const [filter, setFilter] = useState({
     sector: 'Todos los sectores',
@@ -55,26 +56,26 @@ function SeeOrders() {
       confirmButtonText: 'Actualizar',
       cancelButtonText: 'Cancelar',
     });
-  
+
     if (newState) {
       try {
         // Actualizar el estado en el backend
         await api.put(`/sales/${order.idSales}`, { state: newState });
-  
+
         // Actualizar el estado de la orden en la lista de órdenes
         const updatedOrders = orders.map((o) =>
           o.idSales === order.idSales ? { ...o, state: newState } : o
         );
         setOrders(updatedOrders);
-  
+
         // Si la orden se marca como "Pagado", eliminarla de la vista
         if (newState === 'Pagado') {
           setOrders(updatedOrders.filter(o => o.idSales !== order.idSales));
         }
-  
+
         // Verificar si todas las órdenes de la mesa están en estado "Pagado"
         checkAndUpdateTableAvailability(order.table.tableId, updatedOrders);
-  
+
         Swal.fire('Actualizado', 'El estado de la orden ha sido actualizado.', 'success');
       } catch (error) {
         console.error('Error al cambiar el estado de la orden:', error);
@@ -82,7 +83,7 @@ function SeeOrders() {
       }
     }
   };
-  
+
 
   const deleteOrder = async (idSales, tableId) => {
     const confirmDelete = await Swal.fire({
@@ -95,23 +96,23 @@ function SeeOrders() {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     });
-  
+
     if (confirmDelete.isConfirmed) {
       try {
         await api.delete(`/sales/${idSales}`);
-  
+
         // Actualizar la lista de órdenes en el estado después de la eliminación
         const updatedOrders = orders.filter((order) => order.idSales !== idSales);
         setOrders(updatedOrders);
-  
+
         // Verificar si no quedan órdenes asociadas a la misma mesa
         const remainingOrdersForTable = updatedOrders.filter(order => order.table.tableId === tableId);
-  
+
         if (remainingOrdersForTable.length === 0) {
           // Si no quedan órdenes para esta mesa, actualizar su estado a "disponible"
           await api.put(`/tables/changeAvaliable/${tableId}`, { available: true });
         }
-  
+
         Swal.fire('Eliminado', 'La orden ha sido eliminada.', 'success');
       } catch (error) {
         console.error('Error al eliminar la orden:', error);
@@ -119,7 +120,7 @@ function SeeOrders() {
       }
     }
   };
-  
+
 
   const goBack = () => {
     navigate('/OrderMenu');
@@ -133,51 +134,14 @@ function SeeOrders() {
   });
 
   const handleDetails = (order) => {
-    Swal.fire({
-      title: `Detalles de la Orden ${order.idSales}`,
-      html: `
-            <p><strong>Mesa:</strong> ${order.table.sector} Mesa ${order.table.number}</p>
-            <p><strong>Propietario:</strong> ${order.owner}</p>
-            <p><strong>Estado:</strong> ${order.state}</p>
-            <p><strong>Mesero:</strong> ${order.user.firstName} ${order.user.lastName}</p>
-            <hr />
-            <h5>Platos solicitados:</h5>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Subtotal</th>
-                        <th>Notas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${order.dishes.map(dish => `
-                        <tr>
-                            <td>${dish.name}</td>
-                            <td>${dish.price}</td>
-                            <td>${dish.quantity}</td>
-                            <td>${dish.price * dish.quantity}</td>
-                            <td>
-                                ${dish.note ? 
-                                    `<button class="btn btn-info"   
- onclick="showNote('${dish.note}')">Ver Nota</button>` :
-                                    '<span>Sin nota</span>'
-                                }
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-            <p><strong>Total:</strong> ${order.dishes.reduce((total, dish) => total + (dish.price * dish.quantity), 0)}</p>
-        `,
-      confirmButtonText: 'Cerrar',
-      confirmButtonColor: '#6C757D',
-    });
+    setSelectedOrder(order);
   };
 
-  window.showNote = (note) => {
+  const closeModal = () => {
+    setSelectedOrder(null);
+  };
+
+  const showNote = (note) => {
     Swal.fire({
       title: 'Nota del Plato',
       text: note || 'No hay notas adicionales',
@@ -233,7 +197,7 @@ function SeeOrders() {
             <option>Pendiente</option>
             <option>Preparado</option>
             <option>Servido</option>
-           
+
           </select>
         </div>
 
@@ -258,10 +222,10 @@ function SeeOrders() {
                     </span>
                   </td>
                   <td style={{ whiteSpace: 'nowrap' }}>
-                    <button className="btn btn_primary"  style={{ backgroundColor: '#40E2FF', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', minWidth: '80px', whiteSpace: 'nowrap', marginRight: '5px' }} onClick={() => handleDetails(order)}>
+                    <button className="btn btn_primary" style={{ backgroundColor: '#40E2FF', color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', minWidth: '80px', whiteSpace: 'nowrap', marginRight: '5px' }} onClick={() => handleDetails(order)}>
                       Detalles
                     </button>
-                    <button className="btn btn_primary"  style={{  color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', minWidth: '80px', whiteSpace: 'nowrap', marginRight: '5px' }} onClick={() => deleteOrder(order.idSales,order.table.tableId)}>
+                    <button className="btn btn_primary" style={{ color: 'white', fontWeight: 'bold', padding: '10px 13px', fontSize: '17px', minWidth: '80px', whiteSpace: 'nowrap', marginRight: '5px' }} onClick={() => deleteOrder(order.idSales, order.table.tableId)}>
                       Eliminar
                     </button>
                   </td>
@@ -282,6 +246,58 @@ function SeeOrders() {
           </button>
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedOrder && (
+  <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+   <div className="modal-dialog modal-lg d-flex justify-content-center" style={{ maxWidth: '90%' }}>
+      <div className="modal-content bg-dark text-white">
+        <div className="modal-header">
+          <h5 className="modal-title">Detalles de la Orden {selectedOrder.idSales}</h5>
+          <button type="button" className="btn-close btn-close-white" onClick={closeModal}></button>
+        </div>
+        <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+          <div className="d-flex justify-content-between mb-2">
+            <p><strong>Mesa:</strong> {selectedOrder.table.sector} Mesa {selectedOrder.table.number}</p>
+            <p><strong>Propietario:</strong> {selectedOrder.owner}</p>
+            <p><strong>Estado:</strong> {selectedOrder.state}</p>
+            <p><strong>Mesero:</strong> {selectedOrder.user.firstName} {selectedOrder.user.lastName}</p>
+          </div>
+          <hr />
+          <h5>Platos solicitados:</h5>
+          <table className="table table-bordered text-white">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedOrder.dishes.map((dish, index) => (
+                <tr key={index}>
+                  <td>{dish.name}</td>
+                  <td>₡{dish.price}</td>
+                  <td>{dish.quantity}</td>
+                  <td>₡{dish.price * dish.quantity}</td>
+                  <td style={{ maxWidth: '200px' }}><small>{dish.note}</small></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="text-end"><strong>Total:</strong> ₡{selectedOrder.dishes.reduce((total, dish) => total + dish.price * dish.quantity, 0)}</p>
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn_primary" onClick={closeModal} style={{ backgroundColor: '#6C757D' }}>Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
       <Footer />
     </>
   );

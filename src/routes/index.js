@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes,  } from 'react-router-dom';
+import { Route, Routes, } from 'react-router-dom';
 import Home from '../components/Home/Main'
 import HomeTwo from '../components/HomeTwo/Main'
 import HomeThree from '../components/HomeThree/Main'
@@ -9,7 +9,6 @@ import MenuList3 from '../components/MenuList3/Main'
 import ConfigurationMenu from '../components/ConfigurationMenu/Main'
 import About from '../components/About/Main'
 import Reserv1 from '../components/Reserv1/Main'
-import Resrv2 from '../components/Resrv2/Main'
 import Reviews from '../components/Reviews/Main'
 import OurChef from '../components/OurChef/Main'
 import Contact from '../components/Contact/Main'
@@ -22,10 +21,18 @@ import ProtectedRoute from '../components/Auth/ProtectedRoute'
 import Register from '../components/Register/Main'
 import Profile from '../components/Profile/Main'
 import OrdersMenu from '../components/Orders/Main';
+import Raffle from '../components/Raffle/Main';
+import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
+import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
+import ListReser from '../components/Reserv1/MainList';
+
+import Template from '../components/Templates/Main';
+import Recipe from './../components/Dish/Recipe';
+import Review from '../components/Dish/Reviews';
 
 function Index() {
-    
+
   return (
     <>
         <Routes>
@@ -38,19 +45,22 @@ function Index() {
           <Route path="/configurationmenu" element={<ConfigurationMenu />} />
           <Route path="/about" element={<About />} />
           <Route path="/reservation1" element={<Reserv1 />} />
-          <Route path="/reservation2" element={<Resrv2 />} />
+        <Route path="/listreservation" element={<ListReser />} />
           <Route path="/review" element={<Reviews />} />
           <Route path="/ourchef" element={<OurChef />} />
           <Route path="/contact" element={<Contact/>}/>
           <Route path="/bloglist" element={<BlogList />} />
           <Route path="/blogdetail" element={<BlogDetail/>} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/Admin_Categorys" element={<ProtectedRoute allowedRoles={"administrador"} >
-            <Category />
-          </ProtectedRoute>} />
-<Route path="/OrderMenu" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
-            <OrdersMenu />
-          </ProtectedRoute>} />
+          <Route path="/Admin_Categorys" element={
+              <ProtectedRoute allowedRoles={"administrador"} >
+                  <Category />
+              </ProtectedRoute>} />
+
+            <Route path="/OrderMenu" element={
+                <ProtectedRoute allowedRoles={["administrador","empleado"]} >
+                    <OrdersMenu />
+                 </ProtectedRoute>} />
 
 <Route path="/see_orders" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
             <SeeOrders />
@@ -61,6 +71,29 @@ function Index() {
           <Route path='/perfil' element={<ProtectedRoute >
             <Profile />
           </ProtectedRoute>} />
+
+          <Route path='/crear_rifa' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <Raffle />
+          </ProtectedRoute>} />
+
+          <Route path='/listar_rifa' element={ <RaffleListinigPage/> }/>
+
+          <Route path='/administrar_usuarios' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <PeopleTable />
+          </ProtectedRoute>} />
+            
+          <Route path='/reservation1' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <Reserv1 />
+          </ProtectedRoute>} />
+
+          <Route path='/listreservation' element={<ProtectedRoute allowedRoles={"administrador"}>
+            <ListReser />
+          </ProtectedRoute>} />
+
+          <Route path='/dish/:idDish/recipe' element={<Template><Recipe /></Template>} />
+          <Route path='/dish/:idDish/review' element={<Template><Review /></Template>} />
+
+
         </Routes>
     </>
   )
