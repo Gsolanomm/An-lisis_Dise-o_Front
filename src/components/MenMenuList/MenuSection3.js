@@ -153,6 +153,11 @@ function MenuSection3() {
                               <p>{dish.description}</p>
                               <span className="price">₡{dish.price}</span>
 
+                              <div className="dish_buttons">
+                                <button className="btn btn-edit" style={{ color: '#87ceeb' }}>Receta</button>
+                                <button className="btn btn-edit" style={{ color: '#87ceeb' }}>Review</button>
+                              </div>
+
                               {isAdmin && (
                                 <div className="dish_actions">
                                   <button
