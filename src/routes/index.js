@@ -25,7 +25,7 @@ import Raffle from '../components/Raffle/Main';
 import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
 import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
-import ListReser from '../components/Reserv1/Mainlist';
+import ListReser from '../components/Reserv1/MainList';
 
 import Template from '../components/Templates/Main';
 import Recipe from './../components/Dish/Recipe';
