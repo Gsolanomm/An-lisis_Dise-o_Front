@@ -18,11 +18,9 @@ function Main() {
     return (
         <div className='page_wrapper'>
             <Header />
-            <EditProfile />
-            <ProtectedRoute allowedRoles={"administrador"} disableRender={true}>
-            <PeopleTable />
-            </ProtectedRoute>
-
+            <div style={{ padding: '10%', borderRadius: '15px' }}>
+                <EditProfile />
+            </div>
             <Footer />
         </div>
     )

@@ -15,7 +15,6 @@ function Main() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userRole, setUserRole] = useState('');
 
   const navigate = useNavigate();
 
@@ -35,7 +34,6 @@ function Main() {
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
       setIsAdmin(response.data.role === 'administrador');
-      setUserRole(response.data.role); // Guarda el rol del usuario
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'Error al verificar el rol del usuario.', 'error');
@@ -65,8 +63,7 @@ function Main() {
     localStorage.removeItem('accessToken');
     setIsAuthenticated(false);
     setProfileImage(null);
-    setIsAdmin(false); // Restablece el estado de administrador al cerrar sesión
-    setUserRole('');
+    setIsAdmin(false);
     navigate('/login');
   };
 
@@ -104,35 +101,21 @@ function Main() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link>
                 </li>
-
                 <li className="nav-item">
                   <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
                 </li>
-
-                <li className="nav-item"><Link className="nav-link" to="/about" onClick={handleMenuItemClick}>ABOUT US</Link></li>
-
-                {/* Condición para mostrar "Reservaciones" solo a clientes o administradores */}
-                {isAuthenticated && (isAdmin || userRole === 'cliente') && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/listar_rifa" onClick={handleMenuItemClick}>Listar Rifas</Link>
+                </li>
+                {isAuthenticated && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
                   </li>
                 )}
 
                 {isAuthenticated && isAdmin && (
-                  <li className="nav-item has_dropdown">
-                    <Link className="nav-link" to="/OrderMenu" >Comandas</Link>
-                  </li>
-                )}
-
-                <li className="nav-item"><Link className="nav-link" to="/contact" onClick={handleMenuItemClick}>Contact</Link></li>
-                {isAuthenticated && isAdmin && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
-                  </li>
-                )}
-                {isAuthenticated && isAdmin && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
+                    <Link className="nav-link" to="/OrderMenu">Comandas</Link>
                   </li>
                 )}
                 {isAuthenticated && isAdmin && (
@@ -141,9 +124,35 @@ function Main() {
                   </li>
                 )}
 
-
+                {isAuthenticated && isAdmin && (
+                  <>
+                    <li className="nav-item has_dropdown">
+                      <Link className="nav-link" to="#" onClick={handleMenuItemClick}>
+                        Ajustes
+                      </Link>
+                      <span className="drp_btn">
+                        <i className="icofont-rounded-down" />
+                      </span>
+                      <div className="sub_menu">
+                        <ul>
+                          <li className="nav-item">
+                            <Link to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
+                          </li>
+                          <li className="nav-item">
+                            <Link to="/configurationmenu" onClick={handleMenuItemClick}>Agregar al menu </Link>
+                          </li>
+                          <li className="nav-item">
+                            <Link to="/crear_rifa" onClick={handleMenuItemClick}>Crear Rifa</Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </>
+                )}
                 <li className="nav-item contact_number">
-                  <Link className="nav-link" to="tel:+18001234578"><span>Book a table :</span> +1 800 123 45 78</Link>
+                  <Link className="nav-link" to="tel:+18001234578">
+                    <span>Numero telefonico :</span> +506 8888-8888
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -156,13 +165,15 @@ function Main() {
               {isAuthenticated && isUserDropdownOpen && (
                 <div className="user-dropdown">
                   <ul>
-                    <li><Link to="/perfil">Perfil</Link></li>
-                    <li><Link to="/login" onClick={handleLogout}>Cerrar sesión</Link></li>
+                    <li><Link to="/perfil"><i className="fa fa-user"></i></Link></li>
+                    {isAdmin && (
+                      <li><Link to="/administrar_usuarios"><i className="fa fa-screwdriver-wrench"></i></Link></li>
+                    )}
+                    <li><Link to="/login" onClick={handleLogout}><i className="fa fa-sign-out-alt"></i></Link></li>
                   </ul>
                 </div>
               )}
             </div>
-
           </nav>
         </div>
       </header>

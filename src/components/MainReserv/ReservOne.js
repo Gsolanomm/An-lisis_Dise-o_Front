@@ -5,7 +5,7 @@ import api from '../Auth/AxiosConfig';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import './Modal.css';
+import './modal.css';
 
 function ReservOne() {
   const [minDate, setMinDate] = useState('');
@@ -52,7 +52,7 @@ function ReservOne() {
 
   const fetchReservations = async () => {
     try {
-      const response = await api.get(`/reservation/list/${userId}`);
+      const response = await api.get(`/reservations/list/${userId}`);
       setReservations(response.data.reservations);
     } catch (error) {
       console.error('Error fetching reservations:', error);
@@ -112,7 +112,7 @@ function ReservOne() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const finalComment = comment.trim() || 'Sin comentarios';
     const reservationData = {
       namePerson: selectedClient ? selectedClient.firstName : namePerson,
@@ -123,17 +123,14 @@ function ReservOne() {
       idClient: selectedClient ? selectedClient.idUser : userId,
       time: time || availableTimes[0],
     };
-
+  
+    // Verificamos si hay una reserva conflictiva en la misma fecha y hora
     const conflictingReservation = reservations.find((reservation) => {
-
+  
       const formattedReservationDate = new Date(reservation.reservationDate).toISOString().split('T')[0];
-      console.log('Fecha de la reserva existente:', formattedReservationDate);
       const formattedReservationTime = reservation.reservationTime;
-      console.log('Hora de la reserva existente:', formattedReservationTime);
       const formattedSelectedDate = reservationDate.split('T')[0];
-      console.log('Fecha seleccionada:', formattedSelectedDate);
       const formattedSelectedTime = time || availableTimes[0];
-      console.log('Hora seleccionada:', formattedSelectedTime);
   
       return formattedReservationDate === formattedSelectedDate && formattedReservationTime === formattedSelectedTime;
     });
@@ -148,15 +145,15 @@ function ReservOne() {
     }
   
     try {
-      await api.post('/reservation/add', reservationData);
+      await api.post('/reservations/add', reservationData);
       Swal.fire({
         icon: 'success',
         title: '¡Reservación creada!',
         text: 'La reservación ha sido creada exitosamente.',
       });
   
-      fetchReservations(); 
-      resetForm(); 
+      fetchReservations(); // Actualizamos la lista de reservas
+      resetForm(); // Reiniciamos el formulario
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -166,6 +163,7 @@ function ReservOne() {
     }
   };
   
+
 
 
 
@@ -213,10 +211,12 @@ function ReservOne() {
   const handleClientSelect = (client) => {
     setSelectedClient({
       ...client,
-      name: `${client.firstName} ${client.lastName}`
+      name: `${client.firstName} ${client.lastName}`  // Guarda el nombre completo
     });
-    closeModal();
+    setNamePerson(`${client.firstName} ${client.lastName}`);  // Setea el nombre en el campo "Tu Nombre"
+    closeModal();  // Cierra el modal después de seleccionar el cliente
   };
+
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -229,6 +229,33 @@ function ReservOne() {
       setCurrentPage(currentPage - 1);
     }
   };
+
+
+    // Definición de estilos en línea
+    const tableStyles = {
+      backgroundColor: 'black',
+      color: 'white',
+      borderCollapse: 'collapse',
+      width: '100%',
+    };
+  
+    const thTdStyles = {
+      backgroundColor: 'black',
+      color: 'white',
+      border: '1px solid white',
+      padding: '8px',
+      textAlign: 'center',
+    };
+  
+    const hoverRowStyles = {
+      backgroundColor: 'black',
+    };
+  
+    const reservationListStyles = {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    };
 
   return (
     <section className="bredcrumb_section resarvation_form reservationpage_1_bg">
@@ -256,9 +283,9 @@ function ReservOne() {
                       type="text"
                       className="form-control"
                       placeholder="Tu Nombre"
-                      value={namePerson}
-                      onChange={(e) => setNamePerson(e.target.value)}
-                      required={!selectedClient}
+                      value={namePerson} 
+                      onChange={(e) => setNamePerson(e.target.value)}  
+                      required={!selectedClient} 
                     />
                   </div>
                 </div>
@@ -418,29 +445,29 @@ function ReservOne() {
         </div>
         {userRole === 'cliente' && (
 
-          <div className="reservation-table">
+          <div className="reservation-table" >
             <h3>MIS RESERVACIONES</h3>
             <table className="table table-striped">
               <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Teléfono</th>
-                  <th>Fecha de Reserva</th>
-                  <th>Hora de Reserva</th>
-                  <th>Número de Personas</th>
-                  <th>Comentarios</th>
+                <tr style={hoverRowStyles}>
+                  <th style={thTdStyles}>Nombre</th>
+                  <th style={thTdStyles}>Teléfono</th>
+                  <th style={thTdStyles}>Fecha de Reserva</th>
+                  <th style={thTdStyles}>Hora de Reserva</th>
+                  <th style={thTdStyles}>Número de Personas</th>
+                  <th style={thTdStyles}>Comentarios</th>
                 </tr>
               </thead>
               <tbody>
                 {reservations && reservations.length > 0 ? (
                   reservations.map((reservation) => (
-                    <tr key={reservations.idReservation}>
-                      <td>{reservation.namePerson}</td>
-                      <td>{reservation.phoneNumber}</td>
-                      <td>{formatDate(reservation.reservationDate)}</td>
-                      <td>{reservation.reservationTime}</td>
-                      <td>{reservation.numPeople}</td>
-                      <td>{reservation.comment}</td>
+                    <tr key={reservations.idReservation} style={hoverRowStyles}>
+                      <td style={thTdStyles}>{reservation.namePerson}</td>
+                      <td style={thTdStyles}>{reservation.phoneNumber}</td>
+                      <td style={thTdStyles}>{formatDate(reservation.reservationDate)}</td>
+                      <td style={thTdStyles}>{reservation.reservationTime}</td>
+                      <td style={thTdStyles}>{reservation.numPeople}</td>
+                      <td style={thTdStyles}>{reservation.comment}</td>
                     </tr>
                   ))
                 ) : (

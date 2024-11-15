@@ -26,7 +26,7 @@ function ReservOne() {
 
   const fetchReservations = async (page = 1) => {
     try {
-      const response = await api.get('/reservation/list', {
+      const response = await api.get('/reservations/list', {
         params: { page, limit: 10 },
       });
       setReservations(response.data.reservations);
@@ -61,7 +61,7 @@ function ReservOne() {
 
   const handleSave = async () => {
     try {
-      await api.put(`/reservation/update/${editingReservation.idReservation}`, {
+      await api.put(`/reservations/update/${editingReservation.idReservation}`, {
         namePerson,
         phoneNumber,
         reservationDate,
@@ -96,7 +96,7 @@ function ReservOne() {
 
     if (result.isConfirmed) {
       try {
-        await api.delete(`/reservation/delete/${idReservation}`);
+        await api.delete(`/reservations/delete/${idReservation}`);
         setReservations(reservations.filter((reservation) => reservation.idReservation !== idReservation));
         Swal.fire('¡Eliminado!', 'La reservación ha sido eliminada.', 'success');
       } catch (error) {
@@ -171,6 +171,33 @@ function ReservOne() {
     }
   };
 
+
+  // Definición de estilos en línea
+  const tableStyles = {
+    backgroundColor: 'black',
+    color: 'white',
+    borderCollapse: 'collapse',
+    width: '100%',
+  };
+
+  const thTdStyles = {
+    backgroundColor: 'black',
+    color: 'white',
+    border: '1px solid white',
+    padding: '8px',
+    textAlign: 'center',
+  };
+
+  const hoverRowStyles = {
+    backgroundColor: 'black',
+  };
+
+  const reservationListStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  };
+
   return isAuthenticated && (userRole === 'administrador') ? (
     <section className="bredcrumb_section resarvation_form reservationpage_1_bg">
       <div className="container">
@@ -180,36 +207,36 @@ function ReservOne() {
           </span>
           <span className="sub_text">Lista de reservaciones</span>
         </div>
-        <div className="form_inner">
-          <table className="table">
+        <div className="form_inner" style={reservationListStyles}>
+          <table className="table" style={tableStyles}>
             <thead>
               <tr>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Número de personas</th>
-                <th>Comentario</th>
-                <th>Acciones</th>
+                <th style={thTdStyles}>Nombre</th>
+                <th style={thTdStyles}>Teléfono</th>
+                <th style={thTdStyles}>Fecha</th>
+                <th style={thTdStyles}>Hora</th>
+                <th style={thTdStyles}>Número de personas</th>
+                <th style={thTdStyles}>Comentario</th>
+                <th style={thTdStyles}>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {reservations.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="text-center">
+                <tr style={hoverRowStyles}>
+                  <td colSpan="7" className="text-center" style={thTdStyles}>
                     <p>No hay reservaciones disponibles.</p>
                   </td>
                 </tr>
               ) : (
                 reservations.map((reservation) => (
-                  <tr key={reservation.idReservation}>
-                    <td>{reservation.namePerson}</td>
-                    <td>{reservation.phoneNumber}</td>
-                    <td>{formatDate(reservation.reservationDate)}</td>
-                    <td>{reservation.reservationTime}</td>
-                    <td>{reservation.numPeople}</td>
-                    <td>{reservation.comment}</td>
-                    <td>
+                  <tr key={reservation.idReservation} style={hoverRowStyles}>
+                    <td style={thTdStyles}>{reservation.namePerson}</td>
+                    <td style={thTdStyles}>{reservation.phoneNumber}</td>
+                    <td style={thTdStyles}>{formatDate(reservation.reservationDate)}</td>
+                    <td style={thTdStyles}>{reservation.reservationTime}</td>
+                    <td style={thTdStyles}>{reservation.numPeople}</td>
+                    <td style={thTdStyles}>{reservation.comment}</td>
+                    <td style={thTdStyles}>
                       <button className="btn btn-primary" onClick={() => handleEditClick(reservation)}>
                         Editar
                       </button>
