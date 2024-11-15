@@ -26,15 +26,15 @@ function Main() {
             <div className='index_wraper'>
                 <Header />
                 <Banner />
-                <Menulist />
+                {/* <Menulist /> */}
                 <VideoTwo />
-                <MenuSection />
+                {/* <MenuSection /> */}
                 <NoticeSection />
-                <WhoWe />
-                <Testimonial />
-                <OurTeam />
+                {/* <WhoWe /> */}
+                {/* <Testimonial /> */}
+                {/* <OurTeam /> */}
                 <Reservation />
-                <Blog />
+                {/* <Blog /> */}
                 <Footer />
             </div>
         </>
