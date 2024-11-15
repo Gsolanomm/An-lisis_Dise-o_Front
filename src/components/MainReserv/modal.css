@@ -1,166 +1,167 @@
 /* Modal Overlay */
 .modal-overlay {
-    background-color: rgba(0, 0, 0, 0.7);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animation for modal appearance */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  /* Modal Content */
-  .modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease-out;
+  to {
+    opacity: 1;
   }
-  
-  /* Animation for modal appearance */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  /* Modal header */
-  .modal-content h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  /* Input Fields and Textarea */
-  .modal-content input,
-  .modal-content select,
-  .modal-content textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  /* Input Focus Effect */
-  .modal-content input:focus,
-  .modal-content select:focus,
-  .modal-content textarea:focus {
-    border-color: #1f5a62;
-    outline: none;
-  }
-  
-  /* Client List Container */
-  .client-list-container {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
-  /* Client List Items */
-  .client-list-container li {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .client-list-container li:last-child {
-    border-bottom: none;
-  }
-  
-  .client-list-container button {
-    width: 100%;
-    padding: 10px;
-    background-color: #1f5a62;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  /* Hover Effect for Client Buttons */
-  .client-list-container button:hover {
-    background-color: #000000;
-  }
-  
-  /* Modal Pagination */
-  .modal-pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .modal-pagination button {
-    background-color: #1f5a62;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modal-pagination button:hover {
-    background-color: #000000;
-  }
-  
-  /* Close Button */
-  .modal-close-button {
-    background-color: #ddd;
-    color: #333;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    width: 100%;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modal-close-button:hover {
-    background-color: #ccc;
-  }
-  
-  
-  /* Estilo personalizado para el botón */
-  .btn_admin {
-    background-color: #606060; /* Azul-coral */
-    color: white; /* Texto blanco */
-    padding: 10px 20px; /* Espaciado interno */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de fuente */
-    font-weight: bold; /* Negrita */
-    transition: background-color 0.3s ease; /* Efecto al pasar el cursor */
-    margin: 20px 30px; /* Espacio de 20px arriba y abajo, 30px a los lados */
-    width: 605px;
-    height: 50px;
-  }
-  
-  .btn_admin:hover {
-    background-color: #3b6469; /* Cambio de color cuando se pasa el cursor */
-  }
-  
-  /* Centrar el h3 y agregar espacio en la parte superior e inferior */
-  .reservation-table h3 {
-    text-align: center; /* Centra el texto */
-    margin-top: 40px; /* Espacio arriba */
-    margin-bottom: 20px; /* Espacio abajo */
-  }
+}
+
+/* Modal header */
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Input Fields and Textarea */
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+/* Input Focus Effect */
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  border-color: #1f5a62;
+  outline: none;
+}
+
+/* Client List Container */
+.client-list-container {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+/* Client List Items */
+.client-list-container li {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.client-list-container li:last-child {
+  border-bottom: none;
+}
+
+.client-list-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #1f5a62;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover Effect for Client Buttons */
+.client-list-container button:hover {
+  background-color: #000000;
+}
+
+/* Modal Pagination */
+.modal-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.modal-pagination button {
+  background-color: #1f5a62;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-pagination button:hover {
+  background-color: #000000;
+}
+
+/* Close Button */
+.modal-close-button {
+  background-color: #ddd;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.modal-close-button:hover {
+  background-color: #ccc;
+}
+
+
+/* Estilo personalizado para el botón */
+.btn_admin {
+  background-color: #606060; /* Azul-coral */
+  color: white; /* Texto blanco */
+  padding: 10px 20px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 16px; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  transition: background-color 0.3s ease; /* Efecto al pasar el cursor */
+  margin: 20px 30px; /* Espacio de 20px arriba y abajo, 30px a los lados */
+  width: 605px;
+  height: 50px;
+}
+
+.btn_admin:hover {
+  background-color: #3b6469; /* Cambio de color cuando se pasa el cursor */
+}
+
+/* Centrar el h3 y agregar espacio en la parte superior e inferior */
+.reservation-table h3 {
+  text-align: center; /* Centra el texto */
+  margin-top: 40px; /* Espacio arriba */
+  margin-bottom: 20px; /* Espacio abajo */
+}
+
