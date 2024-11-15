@@ -25,76 +25,73 @@ import Raffle from '../components/Raffle/Main';
 import RaffleListinigPage from '../components/Raffle/RaffleListingPage';
 import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
-import ListReser from '../components/Reserv1/MainList';
-
-import Template from '../components/Templates/Main';
-import Recipe from './../components/Dish/Recipe';
-import Review from '../components/Dish/Reviews';
+import ListReser from '../components/Reserv1/Mainlist';
+import Notification from '../components/Notifications/Main';
 
 function Index() {
 
   return (
     <>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home2" element={<HomeTwo />} />
-          <Route path="/home3" element={<HomeThree />} />
-          <Route path="/menulist1" element={<MenuList1 />} />
-          <Route path="/menulist2" element={<MenuList2 />} />
-          <Route path="/menu" element={<MenuList3 />} />
-          <Route path="/configurationmenu" element={<ConfigurationMenu />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/reservation1" element={<Reserv1 />} />
+      <Routes>
+        <Route path="/" element={<HomeTwo/>} />
+        <Route path='/notifications' element={<Notification />} />
+        <Route path="/home2" element={<HomeTwo />} />
+        <Route path="/home3" element={<HomeThree />} />
+        <Route path="/menulist1" element={<MenuList1 />} />
+        <Route path="/menulist2" element={<MenuList2 />} />
+        <Route path="/menu" element={<MenuList3 />} />
+        <Route path="/configurationmenu" element={<ConfigurationMenu />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/reservation1" element={<Reserv1 />} />
         <Route path="/listreservation" element={<ListReser />} />
-          <Route path="/review" element={<Reviews />} />
-          <Route path="/ourchef" element={<OurChef />} />
-          <Route path="/contact" element={<Contact/>}/>
-          <Route path="/bloglist" element={<BlogList />} />
-          <Route path="/blogdetail" element={<BlogDetail/>} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/Admin_Categorys" element={
-              <ProtectedRoute allowedRoles={"administrador"} >
-                  <Category />
-              </ProtectedRoute>} />
-
-            <Route path="/OrderMenu" element={
-                <ProtectedRoute allowedRoles={["administrador","empleado"]} >
-                    <OrdersMenu />
-                 </ProtectedRoute>} />
-
-<Route path="/see_orders" element={<ProtectedRoute allowedRoles={["administrador","mesero"]} >
-            <SeeOrders />
+        <Route path="/review" element={<Reviews />} />
+        <Route path="/ourchef" element={<OurChef />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/bloglist" element={<BlogList />} />
+        <Route path="/blogdetail" element={<BlogDetail />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/Admin_Categorys" element={
+          <ProtectedRoute allowedRoles={"administrador"} >
+            <Category />
           </ProtectedRoute>} />
 
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/perfil' element={<ProtectedRoute >
-            <Profile />
+        <Route path="/OrderMenu" element={
+          <ProtectedRoute allowedRoles={["administrador", "empleado"]} >
+            <OrdersMenu />
           </ProtectedRoute>} />
 
-          <Route path='/crear_rifa' element={<ProtectedRoute allowedRoles={"administrador"}>
-            <Raffle />
-          </ProtectedRoute>} />
+        <Route path="/see_orders" element={<ProtectedRoute allowedRoles={["administrador", "mesero"]} >
+          <SeeOrders />
+        </ProtectedRoute>} />
 
-          <Route path='/listar_rifa' element={ <RaffleListinigPage/> }/>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/perfil' element={<ProtectedRoute >
+          <Profile />
+        </ProtectedRoute>} />
 
-          <Route path='/administrar_usuarios' element={<ProtectedRoute allowedRoles={"administrador"}>
-            <PeopleTable />
-          </ProtectedRoute>} />
-            
-          <Route path='/reservation1' element={<ProtectedRoute allowedRoles={"administrador"}>
-            <Reserv1 />
-          </ProtectedRoute>} />
+        <Route path='/crear_rifa' element={<ProtectedRoute allowedRoles={"administrador"}>
+          <Raffle />
+        </ProtectedRoute>} />
 
-          <Route path='/listreservation' element={<ProtectedRoute allowedRoles={"administrador"}>
-            <ListReser />
-          </ProtectedRoute>} />
+        <Route path='/listar_rifa' element={<RaffleListinigPage />} />
 
-          <Route path='/dish/:idDish/recipe' element={<Template><Recipe /></Template>} />
-          <Route path='/dish/:idDish/review' element={<Template><Review /></Template>} />
+        <Route path='/administrar_usuarios' element={<ProtectedRoute allowedRoles={"administrador"}>
+          <PeopleTable />
+        </ProtectedRoute>} />
+
+        <Route path='/reservation1' element={<ProtectedRoute allowedRoles={"administrador"}>
+          <Reserv1 />
+        </ProtectedRoute>} />
+
+        <Route path='/listreservation' element={<ProtectedRoute allowedRoles={"administrador"}>
+          <ListReser />
+        </ProtectedRoute>} />
 
 
-        </Routes>
+
+
+      </Routes>
     </>
   )
 }

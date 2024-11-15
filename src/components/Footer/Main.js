@@ -13,9 +13,9 @@ function Main() {
             <div className="row py_50">
               <div className="col-md-7 direction_block">
                 <p>
-                  Restaurant St, Delicious City, <br />
-                  London 9578, UK <br />
-                  Booking : <Link to="tel:+88-123-123456">+88-123-123456</Link>
+                Guácimo, 300 metros Norte de la Clinica C.C.S.S.<br />
+                Costa Rica <br />
+                  Contacto : <Link to="tel:+506 2716 5187">+506 2716 5187</Link>
                 </p>
                 <Link to="/contact" className="btn_text">
                   get direction <i className="icofont-long-arrow-right" />
@@ -23,16 +23,16 @@ function Main() {
               </div>
               <div className="col-md-5 text-md-right timing_block">
                 <p>
-                  Monday - Friday : 8AM - 9PM <br />
-                  Saturday - Sunday : 8AM - 11PM
+                  Lunes - Domingos : 11AM - 11PM <br />
+                  
                 </p>
-                <Link to="#" className="btn btn_primary mt-3" id="bookingForm_modelTitle" data-toggle="modal" data-target="#bookingForm_model" onClick={() => setytShow(true)}>
+                {/* <Link to="#" className="btn btn_primary mt-3" id="bookingForm_modelTitle" data-toggle="modal" data-target="#bookingForm_model" onClick={() => setytShow(true)}>
                   book a table
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
-          <div className="foote_widget newsletter_block">
+          {/* <div className="foote_widget newsletter_block">
             <div className="row py_50">
               <div className="col-md-7 offer_block">
                 <h2>Get News &amp; Offers</h2>
@@ -98,14 +98,12 @@ function Main() {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row">
             <div className="col-md-12 copy_right text-center">
               <p>
-                © 2023 Restaurant. All Rights Reserved | Crafted by{" "}
-                <Link to="https://themeforest.net/user/kalanidhithemes" target="blog-list" >
-                  Kalanidhi Themes
-                </Link>
+                © 2024 Restaurante. Derechos reservados 
+         
               </p>
             </div>
           </div>
@@ -128,7 +126,7 @@ function Main() {
                 </button>
                 <h2 className="mb-2">Online Reservation</h2>
                 <p>
-                  Booking request <a href="tel:+88123123456">+88-123-123456</a> or fill
+                  Booking request <a href="tel:+506 2716 5187">+506 2716 5187</a> or fill
                   out the order form
                 </p>
               </div>

@@ -16,20 +16,40 @@ function NoticeSection() {
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const carouselRef = useRef(null);
-
+    const [isAdmin, setIsAdmin] = useState(false);
+    const baseURL = "http://localhost:5000";
+    const fileInputRef = useRef(null);
     useEffect(() => {
         fetchNotices();
+    
+        fetchUserRole();
+        
     }, []);
 
     const fetchNotices = async () => {
         try {
             const response = await api.get('/notices');
             setNews(response.data || []);
+            console.log(response.data);
+            
         } catch (error) {
             console.error('Error al cargar noticias:', error);
             Swal.fire('Error', 'No se pudieron cargar las noticias.', 'error');
         }
+        console.log("Noticias son: ", news.title);
     };
+
+    const fetchUserRole = async () => {
+        try {
+          const response = await api.get('/auth/verify-role', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+          });
+          setIsAdmin(response.data.role === 'administrador');
+        } catch (error) {
+          console.error(error);
+          Swal.fire('Error', 'Error al verificar el rol del usuario.', 'error');
+        }
+      };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -58,6 +78,7 @@ function NoticeSection() {
             [name]: value,
         }));
     };
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -96,6 +117,10 @@ function NoticeSection() {
                 startDate: '',
                 endDate: ''
             });
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ""; // Restablecer el input de archivo
+            }
 
             fetchNotices(); // Actualizar la lista de noticias después de agregar o actualizar
         } catch (error) {
@@ -157,6 +182,7 @@ function NoticeSection() {
         <div className="container my-4">
     <h2 className="text-center mb-4 text-white">Sección de Noticias</h2>
 
+   {isAdmin && (
     <div className="add_news_form mb-4 p-3 border rounded shadow-sm">
         <h3 className="text-center mb-3 text-white">{isEditing ? 'Editar Noticia' : 'Agregar una Nueva Noticia'}</h3>
         <form onSubmit={handleSubmit} className='text-center'>
@@ -188,15 +214,16 @@ function NoticeSection() {
             <div className="row mb-3">
                 <div className="col-md-6">
                     <label htmlFor="image" className="form-label text-white">Imagen de la noticia</label>
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        accept="image/*"
-                        className="form-control"
-                        onChange={handleImageChange}
-                        required={!isEditing}
-                    />
+                   <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept="image/*"
+                                className="form-control"
+                                onChange={handleImageChange}
+                                ref={fileInputRef} // Asociar la referencia al input
+                                required={!isEditing}
+                            />
                 </div>
                 <div className="col-md-3">
                     <label htmlFor="startDate" className="form-label text-white">Fecha de inicio</label>
@@ -231,39 +258,53 @@ function NoticeSection() {
         </form>
     </div>
 
+    )}
+
     {news.length > 0 ? (
         <div ref={carouselRef} id="newsCarousel" className="carousel slide">
             <div className="carousel-inner">
                 {news.map((notice, index) => (
                     <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={notice.idNotice}>
                         <div className="row justify-content-center">
-                            <div className="col-md-4 offset-md-2 ">
+                            <div className="dish_img ">
                                 <img 
-                                    src={notice.urlImage} 
+                                    src={`${baseURL}${notice.urlImage}`}
                                    
                                     className="d-block" 
                                 />
                             </div>
+
+                           
+
                             <div className="col-md-4 text-center text-white">
                                 <h4>{notice.title}</h4>
                                 <p>{notice.description}</p>
                             </div>
-                            <div className="col-md-4 text-center">
-                                <p><strong>Fecha inicio:</strong> {formatDate(notice.startDate)}</p>
-                                <p><strong>Fecha fin:</strong> {formatDate(notice.endDate)}</p>
-                                <button 
-                                    className="btn btn-primary me-2" 
-                                    onClick={() => handleEdit(notice.idNotice)}
-                                >
-                                    Editar
-                                </button>
-                                <button 
-                                    className="btn btn-danger" 
-                                    onClick={() => handleDelete(notice.idNotice)}
-                                >
-                                    Eliminar
-                                </button>
-                            </div>
+
+                            {
+                                isAdmin && (  
+
+
+                                <div className="col-md-4 text-center">
+                                    <p><strong>Fecha inicio:</strong> {formatDate(notice.startDate)}</p>
+                                    <p><strong>Fecha fin:</strong> {formatDate(notice.endDate)}</p>
+                                    <button 
+                                        className="btn btn-primary me-2" 
+                                        onClick={() => handleEdit(notice.idNotice)}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button 
+                                        className="btn btn-danger" 
+                                        onClick={() => handleDelete(notice.idNotice)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                
+                                </div>
+
+                             )}
+
                         </div>
                     </div>
                 ))}

@@ -86,9 +86,9 @@ function Main() {
       <header className={`fixed ${menuOpen ? 'menu-open' : ''}`}>
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg">
-            <Link className="navbar-brand" to="/">
+            {/* <Link className="navbar-brand" to="/">
               <img src={logo} alt="image" />
-            </Link>
+            </Link> */}
             <button className={`navbar-toggler ${menuOpen ? 'open' : ''}`} type="button" onClick={toggleMenu}>
               <span className="navbar-toggler-icon">
                 <span className={`toggle-wrap ${menuOpen ? "active" : ""}`}>
@@ -100,6 +100,9 @@ function Main() {
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/notifications" onClick={handleMenuItemClick}>Notificaciones</Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
@@ -149,11 +152,11 @@ function Main() {
                     </li>
                   </>
                 )}
-                <li className="nav-item contact_number">
-                  <Link className="nav-link" to="tel:+18001234578">
-                    <span>Numero telefonico :</span> +506 8888-8888
+                {/* <li className="nav-item contact_number">
+                  <Link className="nav-link" to="tel:+506 2716 5187">
+                    <span>Numero telefonico :</span> +506 2716 5187
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="user-icon" onClick={toggleUserDropdown}>

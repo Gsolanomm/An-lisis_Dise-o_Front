@@ -27,13 +27,13 @@ function Main() {
                 <Header />
                 <Banner />
                 {/* <Menulist /> */}
-                <VideoTwo />
+             {/* <VideoTwo /> */}
                 {/* <MenuSection /> */}
                 <NoticeSection />
                 {/* <WhoWe /> */}
                 {/* <Testimonial /> */}
                 {/* <OurTeam /> */}
-                <Reservation />
+                {/* <Reservation /> */}
                 {/* <Blog /> */}
                 <Footer />
             </div>

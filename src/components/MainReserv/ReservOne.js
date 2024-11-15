@@ -5,7 +5,7 @@ import api from '../Auth/AxiosConfig';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import './Modal.css';
+import './modal.css';
 
 function ReservOne() {
   const [minDate, setMinDate] = useState('');
