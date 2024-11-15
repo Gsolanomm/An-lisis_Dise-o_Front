@@ -14,7 +14,7 @@ function Main() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false); 
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
 
@@ -107,6 +107,18 @@ function Main() {
                 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/OrderMenu">Comandas</Link>
+                  </li>
+                )}
+
+{isAuthenticated  && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
+                  </li>
+)}
+
+{isAuthenticated && isAdmin && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/listreservation" onClick={handleMenuItemClick}>Lista de reservaciones</Link>
                   </li>
                 )}
                 
