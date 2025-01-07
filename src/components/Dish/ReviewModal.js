@@ -12,8 +12,8 @@ function ReviewModal({ review, onClose, onAddReview }) {
     useEffect(() => {
 
         if (review != null) {
-            setRating(review.rating);
-            setComment(review.comment);
+            setRating(review.starCount);
+            setComment(review.text);
             setAnonimus(review.anonimus);
             setIdUser(review.idUser);
  

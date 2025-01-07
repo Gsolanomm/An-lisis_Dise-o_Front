@@ -27,6 +27,9 @@ import PeopleTable from '../components/Profile/PeopleTable';
 import SeeOrders from '../components/Orders/SeeOrders';
 import ListReser from '../components/Reserv1/Mainlist';
 import Notification from '../components/Notifications/Main';
+import Template from '../components/Templates/Main';
+import Recipe from './../components/Dish/Recipe';
+import Review from '../components/Dish/Reviews';
 
 function Index() {
 
@@ -88,7 +91,9 @@ function Index() {
           <ListReser />
         </ProtectedRoute>} />
 
-
+        <Route path='/dish/:idDish/recipe' element={<Template><Recipe /></Template>} />
+        
+        <Route path='/dish/:idDish/review' element={<Template><Review /></Template>} />
 
 
       </Routes>

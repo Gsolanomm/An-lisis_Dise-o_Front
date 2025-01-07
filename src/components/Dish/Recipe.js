@@ -75,7 +75,7 @@ function Recipe() {
 
     const handleSubmit = () => {
         var data = { instructions, ingredients: JSON.stringify(ingredients) };
-        if (idRecipe == -1) {
+        if (idRecipe == 0) {
             data.idDish = idDish;
             api.post(`/recipes`, data, { withCredentials: true })
             .then((response) => {
