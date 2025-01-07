@@ -86,9 +86,9 @@ function Main() {
       <header className={`fixed ${menuOpen ? 'menu-open' : ''}`}>
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg">
-            <Link className="navbar-brand" to="/">
+            {/* <Link className="navbar-brand" to="/">
               <img src={logo} alt="image" />
-            </Link>
+            </Link> */}
             <button className={`navbar-toggler ${menuOpen ? 'open' : ''}`} type="button" onClick={toggleMenu}>
               <span className="navbar-toggler-icon">
                 <span className={`toggle-wrap ${menuOpen ? "active" : ""}`}>
@@ -99,52 +99,64 @@ function Main() {
             <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link> 
+                  <Link className="nav-link" to="/home2" onClick={closeMenu}>Home</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/notifications" onClick={handleMenuItemClick}>Notificaciones</Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/menu" onClick={handleMenuItemClick}>MENU</Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/listar_rifa" onClick={handleMenuItemClick}>Listar Rifas</Link>
+                </li>
+                {isAuthenticated && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
+                  </li>
+                )}
+
                 {isAuthenticated && isAdmin && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/OrderMenu">Comandas</Link>
                   </li>
                 )}
-
-{isAuthenticated  && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/reservation1" onClick={handleMenuItemClick}>Reservaciones</Link>
-                  </li>
-)}
-
-{isAuthenticated && isAdmin && (
+                {isAuthenticated && isAdmin && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/listreservation" onClick={handleMenuItemClick}>Lista de reservaciones</Link>
                   </li>
                 )}
-                
-                <li className="nav-item">
-                      <Link className="nav-link" to="/listar_rifa" onClick={handleMenuItemClick}>Listar Rifas</Link>
-                    </li>
+
                 {isAuthenticated && isAdmin && (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/configurationmenu" onClick={handleMenuItemClick}>Ajustes de menu</Link>
-                    </li>
-                    {/* New Links for Raffle Management */}
-                    
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/crear_rifa" onClick={handleMenuItemClick}>Crear Rifa</Link>
+                    <li className="nav-item has_dropdown">
+                      <Link className="nav-link" to="#" onClick={handleMenuItemClick}>
+                        Ajustes
+                      </Link>
+                      <span className="drp_btn">
+                        <i className="icofont-rounded-down" />
+                      </span>
+                      <div className="sub_menu">
+                        <ul>
+                          <li className="nav-item">
+                            <Link to="/Admin_Categorys" onClick={handleMenuItemClick}>Categorias</Link>
+                          </li>
+                          <li className="nav-item">
+                            <Link to="/configurationmenu" onClick={handleMenuItemClick}>Agregar al menu </Link>
+                          </li>
+                          <li className="nav-item">
+                            <Link to="/crear_rifa" onClick={handleMenuItemClick}>Crear Rifa</Link>
+                          </li>
+                        </ul>
+                      </div>
                     </li>
                   </>
                 )}
-                <li className="nav-item contact_number">
-                  <Link className="nav-link" to="tel:+18001234578">
-                    <span>Book a table :</span> +1 800 123 45 78
+                {/* <li className="nav-item contact_number">
+                  <Link className="nav-link" to="tel:+506 2716 5187">
+                    <span>Numero telefonico :</span> +506 2716 5187
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="user-icon" onClick={toggleUserDropdown}>
