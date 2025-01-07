@@ -1,57 +1,74 @@
 .centered-form {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: 600px; 
-    margin: 100px auto 0;   
-    padding: 20px;     
-    background-color: #281919;
-    border-radius: 8px;    
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 100px auto 0;
+    padding: 20px;
+    background-color: #000000;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
 }
 
+.left-column, .right-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
 .centered-form .form-group {
-    width: 100%;       
-    margin-bottom: 15px;  
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 .centered-form .form-group label {
-    display: block;    
-    font-size: 14px;   
+    display: block;
+    font-size: 14px;
     margin-bottom: 5px;
-    font-weight: bold;  
 }
 
 .centered-form .form-control {
-    width: 100%;      
-    padding: 10px;     
-    font-size: 16px;  
-    border-radius: 4px;  
-    border: 1px solid #ccc; 
+    width: 100%;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .centered-form .btn {
-    width: 100%;     
-    padding: 10px;    
-    font-size: 16px;  
-    background-color: #007bff; 
-    color: #fff;       
-    border: none;      
-    border-radius: 4px; 
-    cursor: pointer; 
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .centered-form .btn:hover {
-    background-color: #0056b3; 
+    background-color: #0056b3;
 }
 
-.centered-title {
-    text-align: center;
+.categories-container {
+    width: 100%;
+    display: flex;
+    gap: 10px;
 }
 
-.configuration_menu_section {
-    padding-bottom: 30px;
+.categories-container .form-group {
+    flex: 1;
 }
-  
