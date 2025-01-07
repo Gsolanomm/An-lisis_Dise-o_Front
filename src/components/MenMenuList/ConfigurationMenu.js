@@ -116,8 +116,7 @@ function ConfigurationMenu() {
     <section className="configuration_menu_section">
       <form onSubmit={handleSubmit} className="centered-form">
         <div className="left-column">
-          <h3 className="centered-title">Bienvenido a la sección de ajustes de menú, aquí podrás agregar un nuevo platillo</h3>
-          <div className="form-group">
+           <div className="form-group">
             <label htmlFor="name">Nombre</label>
             <input
               type="text"
